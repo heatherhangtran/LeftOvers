@@ -3,13 +3,14 @@ package com.randybiglow.leftovers;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+
+    private PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +34,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        PagerAdapter adapter = new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return 0;
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return false;
-            }
-        };
+        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount()) {};
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -63,8 +54,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
-
 }
