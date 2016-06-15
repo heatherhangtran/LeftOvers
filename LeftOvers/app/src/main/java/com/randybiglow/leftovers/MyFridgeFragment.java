@@ -36,14 +36,11 @@ public class MyFridgeFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-<<<<<<< HEAD
 
-        return inflater.inflate(R.layout.fragment_my_fridge, container, false);
-=======
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
         return fridgeFragmentView;
 
->>>>>>> 81b0b37649e1cca5c1e47b24bad2ee243c1a2ee7
+
     }
 
     public class FridgeCursorAdapter extends CursorAdapter{
