@@ -1,5 +1,6 @@
 package com.randybiglow.leftovers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,9 +21,9 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_INGREDIENT_TABLE =
             "CREATE TABLE " + INGREDIENT_TABLE +
                     "(" +
-                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT " +
-                    COL_NAME + " TEXT " +
-                    COL_EXP + " TEXT " +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NAME + " TEXT, " +
+                    COL_EXP + " TEXT, " +
                     COL_ADDED + " TEXT )";
 
     private static LocalDBHelper instance;
@@ -64,6 +65,15 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
         return cursor;
+    }
+    public void addItem(String name, String exp, String date){
+        SQLiteDatabase myDB = getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_NAME, name);
+        values.put(COL_EXP, exp);
+        values.put(COL_ADDED, date);
+        myDB.insert(INGREDIENT_TABLE, null, values);
+
     }
     //Adding method for detail view
     public Cursor getDescriptionById(int id){
