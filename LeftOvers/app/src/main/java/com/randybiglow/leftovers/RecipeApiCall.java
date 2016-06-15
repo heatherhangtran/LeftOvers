@@ -31,8 +31,7 @@ public class RecipeApiCall {
         AsyncHttpClient client = new AsyncHttpClient();
 
         client.get(
-                //"http://food2fork.com/api/search/?key=" + RecipeAPIData.RECIPE_API_KEY + "&format=json&nojsoncallback=1",
-                "http://food2fork.com/api/search/?key=cffb268379ff64b40aa232d1d143da79&format=json&nojsoncallback=1",
+                "http://food2fork.com/api/search/?key=" + RecipeAPIData.RECIPE_API_KEY + "&format=json&nojsoncallback=1",
                 null,
                 new JsonHttpResponseHandler() {
                     @Override
