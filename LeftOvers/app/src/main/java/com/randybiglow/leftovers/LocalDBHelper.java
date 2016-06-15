@@ -20,9 +20,9 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_INGREDIENT_TABLE =
             "CREATE TABLE " + INGREDIENT_TABLE +
                     "(" +
-                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT " +
-                    COL_NAME + " TEXT " +
-                    COL_EXP + " TEXT " +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NAME + " TEXT, " +
+                    COL_EXP + " TEXT, " +
                     COL_ADDED + " TEXT )";
 
     private static LocalDBHelper instance;
