@@ -3,12 +3,13 @@ package com.randybiglow.leftovers;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeCallback{
 
     private PagerAdapter adapter;
 
@@ -54,5 +55,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void handleCallback(String response) {
+        Fragment currentFragment = adapter.getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof RecipesFragment){
+            ((RecipesFragment)currentFragment).handleCallback(response);
+        }
     }
 }
