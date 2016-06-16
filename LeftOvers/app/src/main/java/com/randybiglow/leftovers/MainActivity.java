@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private PagerAdapter adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(dateFormat.format(date));
                         LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
                         helper.addItem(name, exp, dateFormat.format(date));
+
                     }
                 });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -56,14 +56,11 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     public Cursor getIngredients(){
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(INGREDIENT_TABLE, // a. table
-                INGREDIENT_COLUMNS, // b. column names
-                null, // c. selections
-                null, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
+        Cursor cursor = db.rawQuery("SELECT " + INGREDIENT_TABLE + "." + COL_ID + ", " +
+                COL_NAME + ", " +
+                COL_ADDED + ", " +
+                COL_EXP + " FROM " + INGREDIENT_TABLE,null, null);
+
         return cursor;
     }
     public void addItem(String name, String exp, String date){

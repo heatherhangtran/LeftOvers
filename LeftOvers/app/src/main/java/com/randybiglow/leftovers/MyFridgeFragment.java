@@ -18,30 +18,39 @@ import android.widget.TextView;
 
 public class MyFridgeFragment extends Fragment{
 
-    private FridgeCursorAdapter cursorAdapter;
+    FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
     private LocalDBHelper helper;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        helper =LocalDBHelper.getInstance(getActivity());
-        Cursor cursor = helper.getIngredients();
-        cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
 
 
-
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
+        if (cursorAdapter == null) {
+            helper = LocalDBHelper.getInstance(getActivity());
+            Cursor cursor = helper.getIngredients();
+            cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
+            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
+            listView.setAdapter(cursorAdapter);
+            cursorAdapter.notifyDataSetChanged();
+
+        } else {
+            helper = LocalDBHelper.getInstance(getActivity());
+            Cursor cursor = helper.getIngredients();
+            cursorAdapter.swapCursor(cursor);
+            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
+            listView.setAdapter(cursorAdapter);
+            cursorAdapter.notifyDataSetChanged();
+        }
+
         return fridgeFragmentView;
 
-
     }
+
 
     public class FridgeCursorAdapter extends CursorAdapter{
 
@@ -61,9 +70,10 @@ public class MyFridgeFragment extends Fragment{
             TextView textView = (TextView)view.findViewById(R.id.food_item);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             textView.setText(item);
-            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
 
-            listView.setAdapter(cursorAdapter);
+
+
+
         }
 
 
