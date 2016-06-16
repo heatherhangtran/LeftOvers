@@ -1,5 +1,6 @@
 package com.randybiglow.leftovers;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -81,11 +82,10 @@ public class MainActivity extends AppCompatActivity {
         mBuilder.setContentText(notificationMessage);
         mBuilder.setSmallIcon(R.drawable.forkknife);
         mBuilder.setContentIntent(pIntent);
-
+        mBuilder.setPriority(Notification.PRIORITY_HIGH);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, mBuilder.build());
-
 
     }
 }
