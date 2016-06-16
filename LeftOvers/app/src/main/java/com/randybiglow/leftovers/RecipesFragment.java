@@ -32,8 +32,8 @@ public class RecipesFragment extends Fragment {
     public void handleCallback(String response) {
         Picasso.with(getContext())
                 .load(response)
-                .fit()
-                .centerCrop()
+//                .fit()
+//                .centerCrop()
                 .into(recipeImage);
     }
 }

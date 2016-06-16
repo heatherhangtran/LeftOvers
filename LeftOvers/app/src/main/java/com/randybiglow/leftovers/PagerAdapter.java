@@ -18,9 +18,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new MyFridgeFragment();
+                currentFragment = new MyFridgeFragment();
+                return currentFragment;
             case 1:
-                return new RecipesFragment();
+                currentFragment = new RecipesFragment();
+                return currentFragment;
             default:
                 return null;
         }

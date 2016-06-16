@@ -38,6 +38,7 @@ public class RecipeApiCall {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
 
+
                         String recipeResult = null;
 
                         try {
@@ -52,7 +53,6 @@ public class RecipeApiCall {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                         callback.handleCallback(recipeResult);
                     }
                 }
