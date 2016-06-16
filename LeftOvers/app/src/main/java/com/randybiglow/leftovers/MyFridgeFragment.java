@@ -25,11 +25,9 @@ public class MyFridgeFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        helper =LocalDBHelper.getInstance(getActivity());
+        helper = LocalDBHelper.getInstance(getActivity());
         Cursor cursor = helper.getIngredients();
         cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
-
-
 
     }
 
@@ -59,8 +57,8 @@ public class MyFridgeFragment extends Fragment{
             TextView textView = (TextView)view.findViewById(R.id.food_item);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             textView.setText(item);
-            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
 
+            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
             listView.setAdapter(cursorAdapter);
         }
 
