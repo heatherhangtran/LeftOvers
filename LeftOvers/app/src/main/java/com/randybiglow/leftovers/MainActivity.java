@@ -1,12 +1,20 @@
 package com.randybiglow.leftovers;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+                addNewIngredient();
             }
         });
 
@@ -54,5 +61,35 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void addNewIngredient(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        builder.setView(dialogView);
+        final EditText nameField = (EditText) dialogView.findViewById(R.id.name);
+        final EditText expField = (EditText) dialogView.findViewById(R.id.exp);
+
+        builder.setMessage(R.string.dialog_addnew)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
+                        Date date = new Date();
+                        String name = nameField.getText().toString();
+                        String exp = expField.getText().toString();
+                        System.out.println(dateFormat.format(date));
+                        LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
+                        helper.addItem(name, exp, dateFormat.format(date));
+                    }
+                });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
