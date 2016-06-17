@@ -90,7 +90,6 @@ public class MyFridgeFragment extends Fragment {
                     startActivity(detailsIntent);
                 }
             });
-
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
