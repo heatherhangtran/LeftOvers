@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:id="@+id/expET"
-        android:inputType="number"
-        android:maxLength="10" />
+        android:inputType="date"
+        android:maxLength="11"/>
 
 </LinearLayout>
