@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 public class MyFridgeFragment extends Fragment {
 
-    FridgeCursorAdapter cursorAdapter;
+    static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
     private LocalDBHelper helper;
     private ListView listView;
+    static Cursor cursor;
+    static TextView textView;
 
 
     @Override
@@ -42,7 +44,7 @@ public class MyFridgeFragment extends Fragment {
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
-            final Cursor cursor = helper.getIngredients();
+            cursor = helper.getIngredients();
             cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
             listView = (ListView) fridgeFragmentView.findViewById(R.id.listView);
             listView.setAdapter(cursorAdapter);
@@ -50,17 +52,14 @@ public class MyFridgeFragment extends Fragment {
 
         } else {
             helper = LocalDBHelper.getInstance(getActivity());
-            final Cursor cursor = helper.getIngredients();
+            cursor = helper.getIngredients();
             cursorAdapter.swapCursor(cursor);
-            ListView listView = (ListView) fridgeFragmentView.findViewById(R.id.listView);
+            listView = (ListView) fridgeFragmentView.findViewById(R.id.listView);
             listView.setAdapter(cursorAdapter);
             cursorAdapter.notifyDataSetChanged();
         }
-
         return fridgeFragmentView;
-
     }
-
 
     public class FridgeCursorAdapter extends CursorAdapter {
 
@@ -77,7 +76,7 @@ public class MyFridgeFragment extends Fragment {
 
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
-            TextView textView = (TextView) view.findViewById(R.id.food_item);
+            textView = (TextView) view.findViewById(R.id.food_item);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             textView.setText(item);
 
@@ -92,9 +91,15 @@ public class MyFridgeFragment extends Fragment {
                 }
             });
 
-            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
-            listView.setAdapter(cursorAdapter);
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    cursor.moveToPosition(position);
+                    helper.deleteIngredient(id);
 
+                    return true;
+                }
+            });
         }
     }
 }
