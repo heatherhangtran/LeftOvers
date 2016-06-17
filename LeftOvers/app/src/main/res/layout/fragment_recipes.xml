@@ -4,13 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/recipes"
+    <!--<TextView-->
+        <!--android:id="@+id/recipes"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Testing Recipes Fragment."-->
+        <!--android:layout_marginTop="100dp"-->
+        <!--android:background="#000"/>-->
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Testing Recipes Fragment."
-        android:layout_marginTop="100dp"
-        android:background="#000"/>
+        android:layout_height="match_parent">
 
+    </ListView>
 
 </RelativeLayout>
