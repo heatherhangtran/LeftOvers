@@ -35,5 +35,8 @@ public class RecipesFragment extends Fragment {
 //                .fit()
 //                .centerCrop()
                 .into(recipeImage);
+        testTextView.setText(response);
     }
+
+
 }
