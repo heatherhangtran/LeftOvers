@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 public class RecipesFragment extends Fragment {
 
     ImageView recipeImage;
-    TextView testTextView;
+    TextView recipeName;
     private recipeCursorAdapter cursorAdapter;
     private View recipesFragmentView;
 
@@ -36,13 +36,8 @@ public class RecipesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        TextView test = (TextView) container.findViewById(R.id.recipes);
-//        return inflater.inflate(R.layout.fragment_recipes, container, false);
-        View view = inflater.inflate(R.layout.fragment_recipes, container, false);
-        recipeImage = (ImageView) view.findViewById(R.id.recipeImage);
-        testTextView = (TextView) view.findViewById(R.id.testTextView);
-        RecipeApiCall.getInstance((RecipeCallback)this.getActivity()).doRequest();
 
+        RecipeApiCall.getInstance((RecipeCallback)this.getActivity()).doRequest();
         recipesFragmentView = inflater.inflate(R.layout.fragment_recipes, container, false);
         Log.e("Fragment View", "This shows the Recipes Fragment");
         return recipesFragmentView;
@@ -61,10 +56,9 @@ public class RecipesFragment extends Fragment {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            ImageView imageView = (ImageView)view.findViewById(R.id.recipe_picture);
+            recipeImage = (ImageView)view.findViewById(R.id.recipeImage);
 
-
-            TextView textView = (TextView)view.findViewById(R.id.recipe_name);
+            recipeName = (TextView)view.findViewById(R.id.recipeName);
 
             ListView listView = (ListView)recipesFragmentView.findViewById(R.id.listView);
             listView.setAdapter(cursorAdapter);
