@@ -68,10 +68,16 @@ public class RecipesFragment extends Fragment {
     }
 
     public void handleCallback(String response) {
-        Picasso.with(getContext())
-                .load(response)
+        try{
+            Picasso.with(getContext())
+                    .load(response)
 //                .fit()
 //                .centerCrop()
-                .into(recipeImage);
+                    .into(recipeImage);
+            //testTextView.setText(response);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
