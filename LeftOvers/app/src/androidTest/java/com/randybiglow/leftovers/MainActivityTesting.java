@@ -36,4 +36,14 @@ public class MainActivityTesting {
 //    public void nameEditText(){
 //        //onView(withId(R.id.name)).check(matches(isEnabled()));
 //    }
+
+    //Testing the fragments.
+//    @Test
+//    public void showTextInRecipeFragment(){
+//        ViewInteraction fragmentText = onView(withId(R.id.recipes));
+//        fragmentText.check(ViewAssertions.doesNotExist());
+//        //fragmentText.check(ViewAssertions.matches(isDisplayed)));
+//    }
+
+
 }
