@@ -1,6 +1,7 @@
 package com.randybiglow.leftovers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,14 +18,12 @@ import android.widget.TextView;
  * Created by RandyBiglow on 6/13/16.
  */
 
-public class MyFridgeFragment extends Fragment{
+public class MyFridgeFragment extends Fragment {
 
     FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
     private LocalDBHelper helper;
-
-
-
+    private ListView listView;
 
     @Nullable
     @Override
@@ -32,17 +32,17 @@ public class MyFridgeFragment extends Fragment{
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
-            Cursor cursor = helper.getIngredients();
+            final Cursor cursor = helper.getIngredients();
             cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
-            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
+            listView = (ListView) fridgeFragmentView.findViewById(R.id.listView);
             listView.setAdapter(cursorAdapter);
             cursorAdapter.notifyDataSetChanged();
 
         } else {
             helper = LocalDBHelper.getInstance(getActivity());
-            Cursor cursor = helper.getIngredients();
+            final Cursor cursor = helper.getIngredients();
             cursorAdapter.swapCursor(cursor);
-            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
+            ListView listView = (ListView) fridgeFragmentView.findViewById(R.id.listView);
             listView.setAdapter(cursorAdapter);
             cursorAdapter.notifyDataSetChanged();
         }
@@ -52,10 +52,10 @@ public class MyFridgeFragment extends Fragment{
     }
 
 
-    public class FridgeCursorAdapter extends CursorAdapter{
+    public class FridgeCursorAdapter extends CursorAdapter {
 
 
-        public FridgeCursorAdapter(Context context, Cursor cursor){
+        public FridgeCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
 
         }
@@ -66,18 +66,20 @@ public class MyFridgeFragment extends Fragment{
         }
 
         @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            TextView textView = (TextView)view.findViewById(R.id.food_item);
+        public void bindView(View view, Context context, final Cursor cursor) {
+            TextView textView = (TextView) view.findViewById(R.id.food_item);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             textView.setText(item);
 
-
-
-
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View localView, int position, long id) {
+                    Intent detailsIntent = new Intent(getContext(), DetailsActivity.class);
+                    cursor.moveToPosition(position);
+                    detailsIntent.putExtra("id", cursor.getInt(cursor.getColumnIndex(helper.COL_ID)));
+                    startActivity(detailsIntent);
+                }
+            });
         }
-
-
     }
-
-
 }

@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         builder.setView(dialogView);
-        final EditText nameField = (EditText) dialogView.findViewById(R.id.name);
-        final EditText expField = (EditText) dialogView.findViewById(R.id.exp);
+        final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
+        final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
 
         builder.setMessage(R.string.dialog_addnew)
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
