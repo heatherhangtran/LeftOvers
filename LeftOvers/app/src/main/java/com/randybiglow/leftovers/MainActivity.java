@@ -88,12 +88,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, 0);
 
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.forkknife);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leftovers_wooden_statusbar);
 //        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle().bigPicture(bitmap);
 //        mBuilder.setStyle(bigPictureStyle);
         mBuilder.setContentTitle(notificationTitle);
         mBuilder.setContentText(notificationMessage);
-        mBuilder.setSmallIcon(R.drawable.forkknife);
+        mBuilder.setSmallIcon(R.drawable.leftovers_wooden_statusbar);
         mBuilder.setContentIntent(pIntent);
         mBuilder.setPriority(Notification.PRIORITY_HIGH);
 
