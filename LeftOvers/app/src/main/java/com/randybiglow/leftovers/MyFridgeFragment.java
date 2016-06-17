@@ -75,7 +75,7 @@ public class MyFridgeFragment extends Fragment {
         }
 
         @Override
-        public void bindView(View view, Context context, final Cursor cursor) {
+        public void bindView(View view, Context context,  final Cursor cursor) {
             textView = (TextView) view.findViewById(R.id.food_item);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             textView.setText(item);
@@ -94,9 +94,11 @@ public class MyFridgeFragment extends Fragment {
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    cursor.moveToPosition(position);
-                    helper.deleteIngredient(id);
 
+                    helper.deleteIngredient(id);
+                    Cursor cursor = helper.getIngredients();
+                    cursorAdapter.swapCursor(cursor);
+                    cursorAdapter.notifyDataSetChanged();
                     return true;
                 }
             });
