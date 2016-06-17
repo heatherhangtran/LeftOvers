@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, 0);
 
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.forkknife);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leftovers_wooden_statusbar);
 //        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle().bigPicture(bitmap);
 //        mBuilder.setStyle(bigPictureStyle);
         mBuilder.setContentTitle(notificationTitle);
