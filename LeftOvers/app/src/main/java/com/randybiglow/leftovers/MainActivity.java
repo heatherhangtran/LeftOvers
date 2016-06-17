@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 //        mBuilder.setStyle(bigPictureStyle);
         mBuilder.setContentTitle(notificationTitle);
         mBuilder.setContentText(notificationMessage);
-        mBuilder.setSmallIcon(R.drawable.forkknife);
+        mBuilder.setSmallIcon(R.drawable.leftovers_wooden_statusbar);
         mBuilder.setContentIntent(pIntent);
         mBuilder.setPriority(Notification.PRIORITY_HIGH);
 
