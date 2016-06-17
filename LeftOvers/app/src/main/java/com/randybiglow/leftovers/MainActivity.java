@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -15,7 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
     private PagerAdapter adapter;
 
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount()) {};
+        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount()) {
+        };
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -63,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void addNewIngredient(){
+
+    public void addNewIngredient() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
@@ -93,5 +96,13 @@ public class MainActivity extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void handleCallback(String response) {
+        Fragment currentFragment = adapter.getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof RecipesFragment) {
+            ((RecipesFragment) currentFragment).handleCallback(response);
+        }
     }
 }
