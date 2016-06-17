@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -18,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
     private PagerAdapter adapter;
 
@@ -167,5 +168,13 @@ public class MainActivity extends AppCompatActivity {
         );
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void handleCallback(String response) {
+        Fragment currentFragment = adapter.getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof RecipesFragment) {
+            ((RecipesFragment) currentFragment).handleCallback(response);
+        }
     }
 }
