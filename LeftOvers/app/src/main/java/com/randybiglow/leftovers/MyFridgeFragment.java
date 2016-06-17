@@ -25,6 +25,16 @@ public class MyFridgeFragment extends Fragment {
     private LocalDBHelper helper;
     private ListView listView;
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        helper = LocalDBHelper.getInstance(getActivity());
+        Cursor cursor = helper.getIngredients();
+        cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +81,7 @@ public class MyFridgeFragment extends Fragment {
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             textView.setText(item);
 
+
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View localView, int position, long id) {
@@ -80,6 +91,10 @@ public class MyFridgeFragment extends Fragment {
                     startActivity(detailsIntent);
                 }
             });
+
+            ListView listView = (ListView)fridgeFragmentView.findViewById(R.id.listView);
+            listView.setAdapter(cursorAdapter);
+
         }
     }
 }
