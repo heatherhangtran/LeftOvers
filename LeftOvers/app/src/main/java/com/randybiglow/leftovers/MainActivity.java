@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
     private PagerAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                     if (clean.equals(cleanC)) sel--;
 
                     if (clean.length() < 8) {
-                        clean = clean + getString(R.string.twatcher).substring(clean.length());
+                        clean = clean + getString(R.string.t_watcher).substring(clean.length());
                     } else {
                         //This part makes sure that when we finish entering numbers
                         //the date is correct, fixing it otherwise
@@ -106,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                         int year = Integer.parseInt(clean.substring(4, 8));
 
                         if (mon > 12) mon = 12;
-                        if (mon < 1) mon = 1;
+                        if (mon < 1 ) mon = 1;
+
 
                         cal.set(Calendar.MONTH, mon - 1);
                         year = (year < 2016) ? 2016 : (year > 2050) ? 2050 : year;
@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                                 System.out.println(dateFormat.format(date));
                                 LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
                                 helper.addItem(name, exp, dateFormat.format(date));
+                                MyFridgeFragment.cursor = helper.getIngredients();
+                                MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
+                                MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
                             }
                         }
                 );
