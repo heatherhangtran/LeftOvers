@@ -79,6 +79,15 @@ public class MyFridgeFragment extends Fragment {
                     startActivity(detailsIntent);
                 }
             });
+            listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    cursor.moveToPosition(position);
+                    helper.deleteIngredient(id);
+
+                    return true;
+                }
+            });
         }
     }
 }

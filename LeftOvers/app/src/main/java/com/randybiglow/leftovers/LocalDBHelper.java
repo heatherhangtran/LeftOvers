@@ -89,6 +89,11 @@ public class LocalDBHelper extends SQLiteOpenHelper {
             return null;
         }
     }
+    public void deleteIngredient(long id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(INGREDIENT_TABLE, COL_ID + " = " + id, null );
+    }
+
     //Adding method for searching
     public Cursor searchIngredients(String query){
         SQLiteDatabase db = this.getReadableDatabase();
