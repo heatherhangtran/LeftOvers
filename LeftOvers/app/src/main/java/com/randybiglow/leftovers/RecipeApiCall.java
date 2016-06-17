@@ -27,11 +27,23 @@ public class RecipeApiCall {
         return instance;
     }
 
-    public void doRequest() {
+    //doRequest("apple", "sugar");
+    //key value params.
+
+    public void doRequest(String...ingredients) {
         AsyncHttpClient client = new AsyncHttpClient();
 
+        StringBuilder sb = new StringBuilder();
+        for(String ingredient : ingredients){
+            sb.append(ingredient+",");
+        }
+        String q = sb.toString();
+        q = q.replaceAll(",$", "");
+
+        String url = "http://food2fork.com/api/search/?key=" + RecipeAPIData.RECIPE_API_KEY + "&format=json&nojsoncallback=1&q="+q;
+
         client.get(
-                "http://food2fork.com/api/search/?key=" + RecipeAPIData.RECIPE_API_KEY + "&format=json&nojsoncallback=1",
+                url,
                 null,
                 new JsonHttpResponseHandler() {
                     @Override
@@ -46,8 +58,8 @@ public class RecipeApiCall {
                             title = post.getString("title");
                             source_url = post.getString("source_url");
                             image_url = post.getString("image_url");
-                            //recipeResult = image_url;
-                            recipeResult = title + " /n" + source_url;
+                            recipeResult = image_url;
+                            //recipeResult = title + " /n" + source_url;
 
                         } catch (JSONException e) {
                             e.printStackTrace();
