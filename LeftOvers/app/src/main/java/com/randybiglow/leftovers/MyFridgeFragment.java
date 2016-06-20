@@ -14,10 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-/**
- * Created by RandyBiglow on 6/13/16.
- */
-
 public class MyFridgeFragment extends Fragment {
 
     static FridgeCursorAdapter cursorAdapter;
@@ -25,11 +21,11 @@ public class MyFridgeFragment extends Fragment {
     private LocalDBHelper helper;
     private ListView listView;
     static Cursor cursor;
-    static TextView textView;
+    static TextView nameTextView, expTextView;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         helper = LocalDBHelper.getInstance(getActivity());
         Cursor cursor = helper.getIngredients();
@@ -63,7 +59,6 @@ public class MyFridgeFragment extends Fragment {
 
     public class FridgeCursorAdapter extends CursorAdapter {
 
-
         public FridgeCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
 
@@ -75,10 +70,13 @@ public class MyFridgeFragment extends Fragment {
         }
 
         @Override
-        public void bindView(View view, Context context,  final Cursor cursor) {
-            textView = (TextView) view.findViewById(R.id.food_item);
+        public void bindView(View view, Context context, final Cursor cursor) {
+            nameTextView = (TextView) view.findViewById(R.id.food_item);
+            expTextView = (TextView) view.findViewById(R.id.exp_entered);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
-            textView.setText(item);
+            String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
+            nameTextView.setText(item);
+            expTextView.setText(expiration);
 
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
