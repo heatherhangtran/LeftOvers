@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_weight="9"
-        android:background="#ccc"
         android:orientation="vertical">
 
         <TextView
@@ -26,8 +25,10 @@
 
     <CheckBox
         android:id="@+id/checkbox"
-        android:gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center" />
 
 </LinearLayout>

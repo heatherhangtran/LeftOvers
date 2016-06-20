@@ -76,7 +76,11 @@ public class MyFridgeFragment extends Fragment {
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
             nameTextView.setText(item);
-            expTextView.setText(expiration);
+            if (expiration.matches("")){
+                expTextView.setText("No expiration date");
+            } else {
+                expTextView.setText("Exp: " +expiration);
+            }
 
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
