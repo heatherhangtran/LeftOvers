@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
@@ -74,11 +75,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
-        notifyNotif("Expire ..." , "now");
+        ExpirationReceiver.notifyNotif(this);
 
     }
 
-    private void notifyNotif(String notificationTitle, String notificationMessage) {
+    public void notifyNotif(String notificationTitle, String notificationMessage) {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
+                                DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format, Locale.US));
                                 Date date = new Date();
 
                                 String name = nameField.getText().toString();
@@ -193,19 +194,16 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                         }
                 );
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 }
-
         );
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
     @Override
     public void handleCallback(String response) {
         Fragment currentFragment = adapter.getCurrentFragment();
