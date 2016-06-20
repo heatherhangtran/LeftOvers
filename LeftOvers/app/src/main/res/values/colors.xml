@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="androidGrey">#B0B0B0</color>
+    <color name="colorP">#ffcc5c</color>
+    <color name="colorPD">#ff6f69</color>
+    <color name="colorA">#96ceb4</color>
+    <color name="yellow">#ffeead</color>
 </resources>

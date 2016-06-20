@@ -81,11 +81,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
     private void notifyNotif(String notificationTitle, String notificationMessage) {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-
         Intent intent = new Intent(this, RecipesFragment.class);
-
         PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, 0);
-
 
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leftovers_wooden_statusbar);
 //        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle().bigPicture(bitmap);
@@ -98,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, mBuilder.build());
-
     }
 
     public void addNewIngredient() {

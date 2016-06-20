@@ -28,7 +28,7 @@ public class RecipesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-//        Cursor cursor = helper.getIngredients();
+//        Cursor cursor = helper.getRecipes();
 //        cursorAdapter = new recipeCursorAdapter(getActivity(), cursor);
 
     }
@@ -57,7 +57,6 @@ public class RecipesFragment extends Fragment {
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             recipeImage = (ImageView)view.findViewById(R.id.recipeImage);
-
             recipeName = (TextView)view.findViewById(R.id.recipeName);
 
             ListView listView = (ListView)recipesFragmentView.findViewById(R.id.listView);
@@ -69,6 +68,7 @@ public class RecipesFragment extends Fragment {
 
     public void handleCallback(String response) {
         try{
+
             Picasso.with(getContext())
                     .load(response)
 //                .fit()
