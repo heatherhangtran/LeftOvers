@@ -16,8 +16,8 @@ public class DetailsActivity extends Activity {
 
         Cursor detailsCursor = dbHelper.getDescriptionById(id);
         String itemName = detailsCursor.getString(detailsCursor.getColumnIndex(LocalDBHelper.COL_NAME));
-        String dateAdded = detailsCursor.getString(detailsCursor.getColumnIndex(LocalDBHelper.COL_ADDED));
-        String expiration = detailsCursor.getString(detailsCursor.getColumnIndex(LocalDBHelper.COL_EXP));
+        String dateAdded = getString(R.string.date_added) + " " + detailsCursor.getString(detailsCursor.getColumnIndex(LocalDBHelper.COL_ADDED));
+        String expiration = getString(R.string.expiration) + " " + detailsCursor.getString(detailsCursor.getColumnIndex(LocalDBHelper.COL_EXP));
 
         TextView nameText = (TextView)findViewById(R.id.nameTV);
         TextView addedText = (TextView)findViewById(R.id.addedTV);

@@ -5,4 +5,6 @@
     <string name="date_format">MM/dd/yyyy</string>
     <string name="t_watcher">MMDDYYYY</string>
     <string name="title_activity_details">DetailsActivity</string>
+    <string name="date_added">Date Added: </string>
+    <string name="expiration">Expires: </string>
 </resources>
