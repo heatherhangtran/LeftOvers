@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
-        ExpirationReceiver.notifyNotif(this);
+        ExpirationReceiver.notify(this);
 
     }
 
