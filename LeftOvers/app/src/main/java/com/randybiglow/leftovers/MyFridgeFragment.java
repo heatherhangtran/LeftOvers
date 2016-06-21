@@ -1,8 +1,10 @@
 package com.randybiglow.leftovers;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -62,8 +64,43 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
             cursorAdapter.notifyDataSetChanged();
         }
 
+        //Checks if the API Version is 21 and up to show animation.
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fridgeFragmentView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    v.removeOnLayoutChangeListener(this);
+
+                    //Calls method for animation.
+                    //revealView(fridgeFragmentView);
+                }
+            });
+        }
         return fridgeFragmentView;
     }
+
+
+//    private void revealView(View fridgeFragmentView) {
+//        int x = (fridgeFragmentView.getLeft() + fridgeFragmentView.getRight()) / 2;
+//        int y = (fridgeFragmentView.getTop() + fridgeFragmentView.getBottom()) / 2;
+//        float radius = Math.max(fridgeFragmentView.getWidth(), fridgeFragmentView.getHeight()) * 2.0f;
+//
+//        if (fridgeFragmentView.getVisibility() == View.INVISIBLE) {
+//            fridgeFragmentView.setVisibility(View.VISIBLE);
+//            ViewAnimationUtils.createCircularReveal(fridgeFragmentView, x, y, 0, radius).start();
+//
+//        } else {
+//            Animator reveal = ViewAnimationUtils.createCircularReveal(fridgeFragmentView, x, y, radius, 0);
+//            reveal.addListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    super.onAnimationEnd(animation);
+//                }
+//            });
+//            reveal.start();
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
