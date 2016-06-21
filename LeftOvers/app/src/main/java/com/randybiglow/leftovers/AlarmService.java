@@ -31,7 +31,7 @@ public class AlarmService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.e("ALARM SERVICE", "ON HANDLE INTENT SERVICE WAS REACHED");
-        notification("placeholder", "placeholder expires today!");
+        notification("LeftOvers", "You have food expiring today!");
     }
 
 
