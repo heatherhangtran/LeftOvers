@@ -3,6 +3,7 @@ package com.randybiglow.leftovers;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailsActivity extends Activity {
@@ -22,6 +23,7 @@ public class DetailsActivity extends Activity {
         TextView nameText = (TextView)findViewById(R.id.nameTV);
         TextView addedText = (TextView)findViewById(R.id.addedTV);
         TextView expirationText = (TextView)findViewById(R.id.expTV);
+        ImageView imageView = (ImageView)findViewById(R.id.image);
 
         nameText.setText(itemName);
         addedText.setText(dateAdded);
