@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
@@ -75,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
+
         ExpirationReceiver.notify(this);
 
     }
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         Intent intent = new Intent(this, RecipesFragment.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
 
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leftovers_wooden_statusbar);
 //        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle().bigPicture(bitmap);
@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         builder.setView(dialogView);
         final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
         final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
+
         TextWatcher tw = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                         int year = Integer.parseInt(clean.substring(4, 8));
 
                         if (mon > 12) mon = 12;
-                        if (mon < 1 ) mon = 1;
+                        if (mon < 1) mon = 1;
 
 
                         cal.set(Calendar.MONTH, mon - 1);
@@ -171,32 +172,31 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         };
         expField.addTextChangedListener(tw);
 
-        builder.setMessage(R.string.dialog_addnew)
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format, Locale.US));
-                                Date date = new Date();
 
-                                String name = nameField.getText().toString();
-                                String exp = expField.getText().toString();
-                                System.out.println(dateFormat.format(date));
-                                LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
-                                helper.addItem(name, exp, dateFormat.format(date));
-                                MyFridgeFragment.cursor = helper.getIngredients();
-                                MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
-                                MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
-                            }
-                        }
-                );
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }
-        );
+        builder.setMessage(R.string.dialog_addnew).setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
+                Date date = new Date();
+
+                String name = nameField.getText().toString();
+                String exp = expField.getText().toString();
+                System.out.println(dateFormat.format(date));
+                LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
+                helper.addItem(name, exp, dateFormat.format(date));
+                MyFridgeFragment.cursor = helper.getIngredients();
+                MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
+                MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
