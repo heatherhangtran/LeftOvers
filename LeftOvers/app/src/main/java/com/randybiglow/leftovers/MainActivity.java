@@ -1,19 +1,13 @@
 package com.randybiglow.leftovers;
 
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,12 +15,15 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements RecipeCallback {
-
+    static long time;
     private PagerAdapter adapter;
 
     @Override
@@ -74,27 +71,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
-        notifyNotif("Expire ..." , "now");
 
-    }
 
-    private void notifyNotif(String notificationTitle, String notificationMessage) {
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        Intent intent = new Intent(this, RecipesFragment.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int)System.currentTimeMillis(), intent, 0);
-
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.leftovers_wooden_statusbar);
-//        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle().bigPicture(bitmap);
-//        mBuilder.setStyle(bigPictureStyle);
-        mBuilder.setContentTitle(notificationTitle);
-        mBuilder.setContentText(notificationMessage);
-        mBuilder.setSmallIcon(R.drawable.leftovers_wooden_statusbar);
-        mBuilder.setContentIntent(pIntent);
-        mBuilder.setPriority(Notification.PRIORITY_HIGH);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, mBuilder.build());
     }
 
     public void addNewIngredient() {
@@ -104,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         builder.setView(dialogView);
         final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
         final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
+
         TextWatcher tw = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                         int year = Integer.parseInt(clean.substring(4, 8));
 
                         if (mon > 12) mon = 12;
-                        if (mon < 1 ) mon = 1;
+                        if (mon < 1) mon = 1;
 
 
                         cal.set(Calendar.MONTH, mon - 1);
@@ -170,38 +150,54 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         };
         expField.addTextChangedListener(tw);
 
-        builder.setMessage(R.string.dialog_addnew)
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
-                                Date date = new Date();
 
-                                String name = nameField.getText().toString();
-                                String exp = expField.getText().toString();
-                                System.out.println(dateFormat.format(date));
-                                LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
-                                helper.addItem(name, exp, dateFormat.format(date));
-                                MyFridgeFragment.cursor = helper.getIngredients();
-                                MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
-                                MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
-                            }
-                        }
-                );
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        builder.setMessage(R.string.dialog_addnew).setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DateFormat dateFormat = new SimpleDateFormat(getString(R.string.date_format));
+                Date date = new Date();
 
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
+                String name = nameField.getText().toString();
+                String exp = expField.getText().toString();
+                System.out.println(dateFormat.format(date));
+                LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
+                try {
+                    if ((dateFormat.parse(exp).getTime() - date.getTime()) < 0)
+                        exp = dateFormat.format(date);
+
+                }catch(ParseException e){
+                    e.printStackTrace();
+                }
+                helper.addItem(name, exp, dateFormat.format(date));
+                MyFridgeFragment.cursor = helper.getIngredients();
+                MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
+                MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
+
+                try {
+
+                    Date date2 = dateFormat.parse(exp);
+                    long difference = date2.getTime() - date.getTime();
+                    System.out.println("Days: " + TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS));
+                    time = new GregorianCalendar().getTimeInMillis()+((24*60*60*1000)*(difference));
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
 
-        );
+
+                ExpirationReceiver.notify(MainActivity.this);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
     @Override
     public void handleCallback(String response) {
         Fragment currentFragment = adapter.getCurrentFragment();

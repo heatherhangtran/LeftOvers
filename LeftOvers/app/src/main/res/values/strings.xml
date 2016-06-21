@@ -7,4 +7,5 @@
     <string name="title_activity_details">DetailsActivity</string>
     <string name="date_added">Date Added: </string>
     <string name="expiration">Expires: </string>
+    <string name="search_recipes">Search recipes for checked boxes...</string>
 </resources>
