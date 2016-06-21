@@ -161,6 +161,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                 String exp = expField.getText().toString();
                 System.out.println(dateFormat.format(date));
                 LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
+                try {
+                    if ((dateFormat.parse(exp).getTime() - date.getTime()) < 0)
+                        exp = dateFormat.format(date);
+
+                }catch(ParseException e){
+                    e.printStackTrace();
+                }
                 helper.addItem(name, exp, dateFormat.format(date));
                 MyFridgeFragment.cursor = helper.getIngredients();
                 MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
@@ -170,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
                     Date date2 = dateFormat.parse(exp);
                     long difference = date2.getTime() - date.getTime();
-                    System.out.println ("Days: " + TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS));
+                    System.out.println("Days: " + TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS));
                     time = new GregorianCalendar().getTimeInMillis()+((24*60*60*1000)*(difference));
                 } catch (ParseException e) {
                     e.printStackTrace();
