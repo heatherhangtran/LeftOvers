@@ -11,30 +11,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-/**
- * Created by RandyBiglow on 6/13/16.
- */
-
-public class MyFridgeFragment extends Fragment {
+public class MyFridgeFragment extends Fragment implements View.OnClickListener {
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
     private LocalDBHelper helper;
     private ListView listView;
     static Cursor cursor;
-    static TextView textView;
-
+    static TextView nameTextView, expTextView, testClickedTextView;
+    private Button searchRecipeButton;
+    private CheckBox checkbox;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         helper = LocalDBHelper.getInstance(getActivity());
         Cursor cursor = helper.getIngredients();
         cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
-
     }
 
     @Nullable
@@ -42,6 +40,11 @@ public class MyFridgeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
+        checkbox = (CheckBox) fridgeFragmentView.findViewById(R.id.checkbox);
+        testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
+        searchRecipeButton = (Button) fridgeFragmentView.findViewById(R.id.search_recipes);
+        searchRecipeButton.setOnClickListener(this);
+
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
             cursor = helper.getIngredients();
@@ -58,11 +61,20 @@ public class MyFridgeFragment extends Fragment {
             listView.setAdapter(cursorAdapter);
             cursorAdapter.notifyDataSetChanged();
         }
+
         return fridgeFragmentView;
     }
 
-    public class FridgeCursorAdapter extends CursorAdapter {
+    @Override
+    public void onClick(View v) {
+        String string;
+        if(checkbox != null && checkbox.isChecked()){
+            //string = checkbox.getText();
+            //testClickedTextView.setText(string);
+        }
+    }
 
+    public class FridgeCursorAdapter extends CursorAdapter {
 
         public FridgeCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
@@ -75,11 +87,17 @@ public class MyFridgeFragment extends Fragment {
         }
 
         @Override
-        public void bindView(View view, Context context,  final Cursor cursor) {
-            textView = (TextView) view.findViewById(R.id.food_item);
+        public void bindView(View view, Context context, final Cursor cursor) {
+            nameTextView = (TextView) view.findViewById(R.id.food_item);
+            expTextView = (TextView) view.findViewById(R.id.exp_entered);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
-            textView.setText(item);
-
+            String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
+            nameTextView.setText(item);
+            if (expiration.matches("")){
+                expTextView.setText("No expiration date");
+            } else {
+                expTextView.setText("Exp: " +expiration);
+            }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -90,6 +108,7 @@ public class MyFridgeFragment extends Fragment {
                     startActivity(detailsIntent);
                 }
             });
+
             listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
