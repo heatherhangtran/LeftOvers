@@ -27,6 +27,6 @@ public class ExpirationReceiver extends BroadcastReceiver {
         Intent i = new Intent(context, ExpirationReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
         Log.e("NOTIFY METHOD>>>>", "GOT TO THE NOTIFY METHOD");
-        mgr.set(AlarmManager.RTC, 1, pi);
+        mgr.set(AlarmManager.RTC, MainActivity.time, pi);
     }
 }

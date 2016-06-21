@@ -24,7 +24,6 @@ public class AlarmService extends IntentService {
     @Override
     public IBinder onBind(Intent intent) {
         Log.e("ALARM SERVICE", "ON BIND METHOD REACHER");
-        notification("placeholder", "placeholder expires today!");
     return null;
 
     }
