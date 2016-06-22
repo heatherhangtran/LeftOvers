@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -38,7 +37,6 @@ public class MyFridgeFragment extends Fragment {
         helper = LocalDBHelper.getInstance(getActivity());
         Cursor cursor = helper.getIngredients();
         cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
-
     }
 
     @Nullable
@@ -47,8 +45,6 @@ public class MyFridgeFragment extends Fragment {
 
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
         testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
-
-
         barcodeScanner = (Button) fridgeFragmentView.findViewById(R.id.barcodeScanner);
 
         if (cursorAdapter == null) {
@@ -75,14 +71,9 @@ public class MyFridgeFragment extends Fragment {
                 @Override
                 public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                     v.removeOnLayoutChangeListener(this);
-
-
-                    //Calls method for animation.
-                    //revealView(fridgeFragmentView);
                 }
             });
         }
-
 
         barcodeScanner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +91,6 @@ public class MyFridgeFragment extends Fragment {
             super(context, cursor, 0);
 
         }
-
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -149,7 +139,6 @@ public class MyFridgeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
         Log.d("<><><>", "onActivityResult");
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult != null) {
