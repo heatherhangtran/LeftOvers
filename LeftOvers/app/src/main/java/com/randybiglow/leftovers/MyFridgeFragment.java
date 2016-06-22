@@ -14,9 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -27,9 +28,9 @@ public class MyFridgeFragment extends Fragment {
     private LocalDBHelper helper;
     private ListView listView;
     static Cursor cursor;
-    static TextView nameTextView, expTextView, testClickedTextView;
+    static TextView nameTextView, expTextView;
 
-    private Button barcodeScanner;
+    private ImageButton barcodeScanner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,7 @@ public class MyFridgeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
-        testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
-        barcodeScanner = (Button) fridgeFragmentView.findViewById(R.id.barcodeScanner);
+        barcodeScanner = (ImageButton) fridgeFragmentView.findViewById(R.id.barcodeScanner);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
