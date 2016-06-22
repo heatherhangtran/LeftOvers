@@ -11,13 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MyFridgeFragment extends Fragment implements View.OnClickListener {
+public class MyFridgeFragment extends Fragment{
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
@@ -25,8 +22,8 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
     private ListView listView;
     static Cursor cursor;
     static TextView nameTextView, expTextView, testClickedTextView;
-    private Button searchRecipeButton;
-    private CheckBox checkbox;
+
+
 
 
     @Override
@@ -65,14 +62,6 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
         return fridgeFragmentView;
     }
 
-    @Override
-    public void onClick(View v) {
-        String string;
-        if(checkbox != null && checkbox.isChecked()){
-            //string = checkbox.getText();
-            //testClickedTextView.setText(string);
-        }
-    }
 
     public class FridgeCursorAdapter extends CursorAdapter {
 
@@ -95,10 +84,6 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
             nameTextView.setText(item);
-            searchRecipeButton = (Button) view.findViewById(R.id.search_recipes);
-            checkbox = (CheckBox) view.findViewById(R.id.checkbox);
-            checkbox.setFocusable(false);
-            checkbox.setFocusableInTouchMode(false);
 
             if (expiration.matches("")){
                 expTextView.setText("No expiration date");
@@ -113,14 +98,6 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
                     cursor.moveToPosition(position);
                     detailsIntent.putExtra("id", cursor.getInt(cursor.getColumnIndex(helper.COL_ID)));
                     startActivity(detailsIntent);
-                }
-            });
-            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        testClickedTextView.setText(cursor.getString(cursor.getColumnIndex(LocalDBHelper.COL_NAME)));
-                    }
                 }
             });
 
