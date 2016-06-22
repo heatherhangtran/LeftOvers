@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,12 +28,14 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
     private Button searchRecipeButton;
     private CheckBox checkbox;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         helper = LocalDBHelper.getInstance(getActivity());
         Cursor cursor = helper.getIngredients();
         cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
+
     }
 
     @Nullable
@@ -40,10 +43,7 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
-        checkbox = (CheckBox) fridgeFragmentView.findViewById(R.id.checkbox);
         testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
-        searchRecipeButton = (Button) fridgeFragmentView.findViewById(R.id.search_recipes);
-        searchRecipeButton.setOnClickListener(this);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
@@ -81,8 +81,10 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
 
         }
 
+
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
+
             return LayoutInflater.from(context).inflate(R.layout.list_item_layout, parent, false);
         }
 
@@ -93,10 +95,15 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
             nameTextView.setText(item);
+            searchRecipeButton = (Button) view.findViewById(R.id.search_recipes);
+            checkbox = (CheckBox) view.findViewById(R.id.checkbox);
+            checkbox.setFocusable(false);
+            checkbox.setFocusableInTouchMode(false);
+
             if (expiration.matches("")){
                 expTextView.setText("No expiration date");
             } else {
-                expTextView.setText("Exp: " +expiration);
+                expTextView.setText("Exp: " + expiration);
             }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,6 +113,14 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
                     cursor.moveToPosition(position);
                     detailsIntent.putExtra("id", cursor.getInt(cursor.getColumnIndex(helper.COL_ID)));
                     startActivity(detailsIntent);
+                }
+            });
+            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        testClickedTextView.setText(cursor.getString(cursor.getColumnIndex(LocalDBHelper.COL_NAME)));
+                    }
                 }
             });
 
