@@ -36,3 +36,5 @@ build/
 obj/
 
 /app/src/main/java/com/randybiglow/leftovers/RecipeAPIData.java
+/app/src/main/java/com/randybiglow/leftovers/BarcodeApiData.java
+

@@ -75,6 +75,7 @@ public class MyFridgeFragment extends Fragment {
             });
         }
 
+        //Calls on third party libraries to start barcode scanner.
         barcodeScanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +83,7 @@ public class MyFridgeFragment extends Fragment {
                 intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
             }
         });
+
         return fridgeFragmentView;
     }
 
@@ -137,6 +139,7 @@ public class MyFridgeFragment extends Fragment {
         }
     }
 
+    //This method returns the scan as a string of numbers.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("<><><>", "onActivityResult");
