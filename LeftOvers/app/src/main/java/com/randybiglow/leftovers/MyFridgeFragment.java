@@ -1,20 +1,27 @@
 package com.randybiglow.leftovers;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MyFridgeFragment extends Fragment{
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+public class MyFridgeFragment extends Fragment {
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
@@ -23,8 +30,7 @@ public class MyFridgeFragment extends Fragment{
     static Cursor cursor;
     static TextView nameTextView, expTextView, testClickedTextView;
 
-
-
+    private Button barcodeScanner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,9 @@ public class MyFridgeFragment extends Fragment{
 
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
         testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
+
+
+        barcodeScanner = (Button) fridgeFragmentView.findViewById(R.id.barcodeScanner);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
@@ -59,9 +68,31 @@ public class MyFridgeFragment extends Fragment{
             cursorAdapter.notifyDataSetChanged();
         }
 
+        //Checks if the API Version is 21 and up to show animation.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fridgeFragmentView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    v.removeOnLayoutChangeListener(this);
+
+
+                    //Calls method for animation.
+                    //revealView(fridgeFragmentView);
+                }
+            });
+        }
+
+
+        barcodeScanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+            }
+        });
         return fridgeFragmentView;
     }
-
 
     public class FridgeCursorAdapter extends CursorAdapter {
 
@@ -85,7 +116,8 @@ public class MyFridgeFragment extends Fragment{
             String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
             nameTextView.setText(item);
 
-            if (expiration.matches("")){
+            if (expiration.matches("")) {
+
                 expTextView.setText("No expiration date");
             } else {
                 expTextView.setText("Exp: " + expiration);
@@ -114,4 +146,17 @@ public class MyFridgeFragment extends Fragment{
             });
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("<><><>", "onActivityResult");
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanResult != null) {
+            Log.d("<><><><><><>", "THE SCANNER WORKS!!" + scanResult.toString());
+        }
+    }
+
+    //send the number to zxing database and get a result.
+    //searchupc.com
 }
