@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
     static long time;
     private PagerAdapter adapter;
 
+    private Uri imageUri;
+    String mCurrentPhotoPath;
+    private static int TAKE_PICTURE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         builder.setView(dialogView);
         final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
         final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
-        final Button cameraButton = (Button)dialogView.findViewById(R.id.camera_button);
+        final Button cameraButton = (Button) dialogView.findViewById(R.id.camera_button);
 
         TextWatcher tw = new TextWatcher() {
             @Override
@@ -159,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto(v);
+                takePhoto();
             }
         });
 
@@ -172,16 +176,26 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
                 String name = nameField.getText().toString();
                 String exp = expField.getText().toString();
+//                Blob blob = cameraButton.get
                 System.out.println(dateFormat.format(date));
                 LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
                 try {
                     if ((dateFormat.parse(exp).getTime() - date.getTime()) < 0)
                         exp = dateFormat.format(date);
 
-                }catch(ParseException e){
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                helper.addItem(name, exp, dateFormat.format(date));
+
+                String imagePath = imageUri != null ? imageUri.toString() : null;
+
+                long id = helper.addItem(name, exp, dateFormat.format(date), imagePath);
+
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                intent.putExtra("id", id);
+                imageUri = null;
+//                startActivity(intent);
+
                 MyFridgeFragment.cursor = helper.getIngredients();
                 MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
                 MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
@@ -191,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                     Date date2 = dateFormat.parse(exp);
                     long difference = date2.getTime() - date.getTime();
                     System.out.println("Days: " + TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS));
-                    time = new GregorianCalendar().getTimeInMillis()+((24*60*60*1000)*(difference));
+                    time = new GregorianCalendar().getTimeInMillis() + ((24 * 60 * 60 * 1000) * (difference));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -212,22 +226,29 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         dialog.show();
     }
 
-    String mCurrentPhotoPath;
+//    private File getImageFile(Uri imageUri) {
+//
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        if (storageDir == null) {
+//            return null;
+//        }
+//        return new File(storageDir, imageUri.getLastPathSegment());
+//
+//    }
 
-    private File createImageFile() throws IOException{
+    //create file for photo taken by user
+    private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir =getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, "jpg", storageDir);
 
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
 
-    private Uri imageUri;
-    private static int TAKE_PICTURE = 1;
-
-    private void takePhoto(View v) {
+    //start camera to take photo and save image to file name
+    private void takePhoto() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File photoFile = null;
 
@@ -243,6 +264,19 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         startActivityForResult(intent, TAKE_PICTURE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (resultCode == RESULT_CANCELED && requestCode == TAKE_PICTURE) {
+
+            //todo delete file at imageUri
+//            File file = new File(imageUri.getPath());
+//            file.delete();
+//            imageUri = null;
+
+        }
+    }
 
 
     @Override

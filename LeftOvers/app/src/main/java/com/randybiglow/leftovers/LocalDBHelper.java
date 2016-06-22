@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Blob;
-
 /**
  * Created by DarrellG on 6/13/16.
  */
 public class LocalDBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "FRIDGE.db";
     public static final String INGREDIENT_TABLE = "INGREDIENTS";
     public static final String COL_ID = "_id";
@@ -28,7 +26,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                     COL_NAME + " TEXT, " +
                     COL_EXP + " TEXT, " +
                     COL_ADDED + " TEXT, " +
-                    COL_PHOTO + " BLOB )";
+                    COL_PHOTO + " TEXT )";
 
     private static LocalDBHelper instance;
 
@@ -67,18 +65,19 @@ public class LocalDBHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
-    public void addItem(String name, String exp, String date, Blob blob){
+    public long addItem(String name, String exp, String date, String imagePath){
         SQLiteDatabase myDB = getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_NAME, name);
         values.put(COL_EXP, exp);
         values.put(COL_ADDED, date);
-        values.put(COL_PHOTO, String.valueOf(blob));
-        myDB.insert(INGREDIENT_TABLE, null, values);
+        if(imagePath != null)values.put(COL_PHOTO, imagePath);
+//        values.put(COL_PHOTO, String.valueOf(blob));
+        return myDB.insert(INGREDIENT_TABLE, null, values);
 
     }
     //Adding method for detail view
-    public Cursor getDescriptionById(int id){
+    public Cursor getDescriptionById(long id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(INGREDIENT_TABLE,
                 new String[]{COL_ID, COL_NAME, COL_ADDED, COL_EXP, COL_PHOTO},
