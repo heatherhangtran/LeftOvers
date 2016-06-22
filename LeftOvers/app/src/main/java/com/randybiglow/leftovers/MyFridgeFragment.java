@@ -17,8 +17,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MyFridgeFragment extends Fragment implements View.OnClickListener {
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+public class MyFridgeFragment extends Fragment {
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
@@ -26,7 +30,7 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
     private ListView listView;
     static Cursor cursor;
     static TextView nameTextView, expTextView, testClickedTextView;
-    private Button searchRecipeButton;
+    private Button searchRecipeButton, barcodeScanner;
     private CheckBox checkbox;
 
     @Override
@@ -45,7 +49,7 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
         checkbox = (CheckBox) fridgeFragmentView.findViewById(R.id.checkbox);
         testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
         searchRecipeButton = (Button) fridgeFragmentView.findViewById(R.id.search_recipes);
-        searchRecipeButton.setOnClickListener(this);
+        barcodeScanner = (Button) fridgeFragmentView.findViewById(R.id.barcodeScanner);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
@@ -65,7 +69,7 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
         }
 
         //Checks if the API Version is 21 and up to show animation.
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fridgeFragmentView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                 @Override
@@ -77,37 +81,31 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
                 }
             });
         }
+
+        searchRecipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Add Recipe Button code here.
+            }
+        });
+
+        barcodeScanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                intentIntegrator.initiateScan();
+            }
+        });
         return fridgeFragmentView;
     }
 
-
-//    private void revealView(View fridgeFragmentView) {
-//        int x = (fridgeFragmentView.getLeft() + fridgeFragmentView.getRight()) / 2;
-//        int y = (fridgeFragmentView.getTop() + fridgeFragmentView.getBottom()) / 2;
-//        float radius = Math.max(fridgeFragmentView.getWidth(), fridgeFragmentView.getHeight()) * 2.0f;
-//
-//        if (fridgeFragmentView.getVisibility() == View.INVISIBLE) {
-//            fridgeFragmentView.setVisibility(View.VISIBLE);
-//            ViewAnimationUtils.createCircularReveal(fridgeFragmentView, x, y, 0, radius).start();
-//
-//        } else {
-//            Animator reveal = ViewAnimationUtils.createCircularReveal(fridgeFragmentView, x, y, radius, 0);
-//            reveal.addListener(new AnimatorListenerAdapter() {
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    super.onAnimationEnd(animation);
-//                }
-//            });
-//            reveal.start();
-//        }
-//    }
-
-    @Override
-    public void onClick(View v) {
-        String string;
-        if(checkbox != null && checkbox.isChecked()){
-            //string = checkbox.getText();
-            //testClickedTextView.setText(string);
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if(intentResult != null){
+            String scanContent = intentResult.getContents();
+            testClickedTextView.setText("CONTENT: " + scanContent);
+        } else {
+            Toast.makeText(getContext(), "No scan data received!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -130,10 +128,10 @@ public class MyFridgeFragment extends Fragment implements View.OnClickListener {
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
             nameTextView.setText(item);
-            if (expiration.matches("")){
+            if (expiration.matches("")) {
                 expTextView.setText("No expiration date");
             } else {
-                expTextView.setText("Exp: " +expiration);
+                expTextView.setText("Exp: " + expiration);
             }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
