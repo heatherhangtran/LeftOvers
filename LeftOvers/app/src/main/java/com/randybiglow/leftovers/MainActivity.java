@@ -2,7 +2,11 @@ package com.randybiglow.leftovers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,8 +16,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +32,10 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity implements RecipeCallback {
     static long time;
     private PagerAdapter adapter;
+
+    private Uri imageUri;
+    String mCurrentPhotoPath;
+    private static int TAKE_PICTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +79,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
-
-
-
     }
 
     public void addNewIngredient() {
@@ -80,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         builder.setView(dialogView);
         final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
         final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
+        final Button cameraButton = (Button) dialogView.findViewById(R.id.camera_button);
 
         TextWatcher tw = new TextWatcher() {
             @Override
@@ -148,6 +157,14 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         expField.addTextChangedListener(tw);
 
 
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto();
+            }
+        });
+
+
         builder.setMessage(R.string.dialog_addnew).setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -156,16 +173,26 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
                 String name = nameField.getText().toString();
                 String exp = expField.getText().toString();
+//                Blob blob = cameraButton.get
                 System.out.println(dateFormat.format(date));
                 LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
                 try {
                     if ((dateFormat.parse(exp).getTime() - date.getTime()) < 0)
                         exp = dateFormat.format(date);
 
-                }catch(ParseException e){
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                helper.addItem(name, exp, dateFormat.format(date));
+
+                String imagePath = imageUri != null ? imageUri.toString() : null;
+
+                long id = helper.addItem(name, exp, dateFormat.format(date), imagePath);
+
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                intent.putExtra("id", id);
+                imageUri = null;
+//                startActivity(intent);
+
                 MyFridgeFragment.cursor = helper.getIngredients();
                 MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
                 MyFridgeFragment.cursorAdapter.changeCursor(MyFridgeFragment.cursor);
@@ -175,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                     Date date2 = dateFormat.parse(exp);
                     long difference = date2.getTime() - date.getTime();
                     System.out.println("Days: " + TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS));
-                    time = new GregorianCalendar().getTimeInMillis()+((24*60*60*1000)*(difference));
+                    time = new GregorianCalendar().getTimeInMillis() + ((24 * 60 * 60 * 1000) * (difference));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -195,6 +222,60 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+//    private File getImageFile(Uri imageUri) {
+//
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        if (storageDir == null) {
+//            return null;
+//        }
+//        return new File(storageDir, imageUri.getLastPathSegment());
+//
+//    }
+
+    //create file for photo taken by user
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, "jpg", storageDir);
+
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    //start camera to take photo and save image to file name
+    private void takePhoto() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile = null;
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        imageUri = Uri.fromFile(photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, TAKE_PICTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (resultCode == RESULT_CANCELED && requestCode == TAKE_PICTURE) {
+
+            //todo delete file at imageUri
+//            File file = new File(imageUri.getPath());
+//            file.delete();
+//            imageUri = null;
+
+        }
+    }
+
+
     @Override
     public void handleCallback(String response) {
         Fragment currentFragment = adapter.getCurrentFragment();
