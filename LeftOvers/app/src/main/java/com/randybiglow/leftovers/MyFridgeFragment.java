@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -93,20 +93,10 @@ public class MyFridgeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-                intentIntegrator.initiateScan();
+                intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
             }
         });
         return fridgeFragmentView;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if(intentResult != null){
-            String scanContent = intentResult.getContents();
-            testClickedTextView.setText("CONTENT: " + scanContent);
-        } else {
-            Toast.makeText(getContext(), "No scan data received!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public class FridgeCursorAdapter extends CursorAdapter {
@@ -157,4 +147,17 @@ public class MyFridgeFragment extends Fragment {
             });
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("<><><>", "onActivityResult");
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanResult != null) {
+            Log.d("<><><><><><>", "THE SCANNER WORKS!!" + scanResult.toString());
+        }
+    }
+
+    //send the number to zxing database and get a result.
+    //searchupc.com
 }
