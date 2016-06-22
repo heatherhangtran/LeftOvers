@@ -2,7 +2,11 @@ package com.randybiglow.leftovers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,8 +16,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
-
-
-
     }
 
     public void addNewIngredient() {
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         builder.setView(dialogView);
         final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
         final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
+        final Button cameraButton = (Button)dialogView.findViewById(R.id.camera_button);
 
         TextWatcher tw = new TextWatcher() {
             @Override
@@ -151,6 +156,14 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         expField.addTextChangedListener(tw);
 
 
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto(v);
+            }
+        });
+
+
         builder.setMessage(R.string.dialog_addnew).setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -198,6 +211,40 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException{
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir =getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, "jpg", storageDir);
+
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    private Uri imageUri;
+    private static int TAKE_PICTURE = 1;
+
+    private void takePhoto(View v) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile = null;
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        imageUri = Uri.fromFile(photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, TAKE_PICTURE);
+    }
+
+
+
     @Override
     public void handleCallback(String response) {
         Fragment currentFragment = adapter.getCurrentFragment();

@@ -8,4 +8,5 @@
     <string name="date_added">Date Added: </string>
     <string name="expiration">Expires: </string>
     <string name="search_recipes">Search recipes for checked boxes...</string>
+    <string name="camera">Add a photo?</string>
 </resources>

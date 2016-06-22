@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.Blob;
+
 /**
  * Created by DarrellG on 6/13/16.
  */
@@ -17,14 +19,16 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     public static final String COL_NAME = "Name";
     public static final String COL_EXP = "Expiration";
     public static final String COL_ADDED = "Added";
-    public static final String[] INGREDIENT_COLUMNS = {COL_ID, COL_NAME, COL_EXP, COL_ADDED};
+    public static final String COL_PHOTO = "Photo";
+    public static final String[] INGREDIENT_COLUMNS = {COL_ID, COL_NAME, COL_EXP, COL_ADDED, COL_PHOTO};
     private static final String CREATE_INGREDIENT_TABLE =
             "CREATE TABLE " + INGREDIENT_TABLE +
                     "(" +
                     COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COL_NAME + " TEXT, " +
                     COL_EXP + " TEXT, " +
-                    COL_ADDED + " TEXT )";
+                    COL_ADDED + " TEXT, " +
+                    COL_PHOTO + " BLOB )";
 
     private static LocalDBHelper instance;
 
@@ -63,12 +67,13 @@ public class LocalDBHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
-    public void addItem(String name, String exp, String date){
+    public void addItem(String name, String exp, String date, Blob blob){
         SQLiteDatabase myDB = getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_NAME, name);
         values.put(COL_EXP, exp);
         values.put(COL_ADDED, date);
+        values.put(COL_PHOTO, String.valueOf(blob));
         myDB.insert(INGREDIENT_TABLE, null, values);
 
     }
@@ -76,7 +81,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     public Cursor getDescriptionById(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(INGREDIENT_TABLE,
-                new String[]{COL_ID, COL_NAME, COL_ADDED, COL_EXP},
+                new String[]{COL_ID, COL_NAME, COL_ADDED, COL_EXP, COL_PHOTO},
                 COL_ID+" = ?",
                 new String[]{String.valueOf(id)},
                 null,
