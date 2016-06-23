@@ -1,19 +1,25 @@
 package com.randybiglow.leftovers;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +41,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
     private Uri imageUri;
     String mCurrentPhotoPath;
-    private static int TAKE_PICTURE = 1;
+    private static int TAKE_PICTURE = 0;
+
+    public static final int PERMISSIONS_REQUEST_CAMERA = 0;
+    public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 321;
+//    public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +170,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto();
+//                takePhoto();
+                requestPermissions("android.permission.CAMERA", 0);
+                requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
+                requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
+                //takePhoto();
+
+                //ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
             }
         });
 
@@ -173,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
                 String name = nameField.getText().toString();
                 String exp = expField.getText().toString();
-//                Blob blob = cameraButton.get
                 System.out.println(dateFormat.format(date));
                 LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
                 try {
@@ -246,6 +261,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
     //start camera to take photo and save image to file name
     private void takePhoto() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+//            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File photoFile = null;
 
@@ -259,6 +281,40 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         imageUri = Uri.fromFile(photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, TAKE_PICTURE);
+    }
+
+    private void requestPermissions(String permission, int requestCode){
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+                Log.d("permission", permission);
+//                takePhoto();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
+        switch (requestCode) {
+//            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    takePhoto();
+//                }
+//                break;
+//            case PERMISSIONS_REQUEST_CAMERA:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    takePhoto();
+//                }
+//                break;
+            case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takePhoto();
+                }
+
+                break;
+        }
     }
 
     @Override

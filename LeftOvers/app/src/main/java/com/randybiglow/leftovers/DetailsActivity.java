@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DetailsActivity extends Activity {
 
@@ -21,7 +20,6 @@ public class DetailsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
 
         itemImage = (ImageView) findViewById(R.id.image);
 
@@ -36,7 +34,6 @@ public class DetailsActivity extends Activity {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(cr, imageUri);
             itemImage.setImageBitmap(bitmap);
-            Toast.makeText(this, "Image taken", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,8 +52,6 @@ public class DetailsActivity extends Activity {
         TextView nameText = (TextView) findViewById(R.id.nameTV);
         TextView addedText = (TextView) findViewById(R.id.addedTV);
         TextView expirationText = (TextView) findViewById(R.id.expTV);
-
-
 
         nameText.setText(itemName);
         addedText.setText(dateAdded);
