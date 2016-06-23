@@ -54,16 +54,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        LayoutInflater titleInflator = LayoutInflater.from(this);
-//        View v = titleInflator.inflate(R.layout.titleview, null);
-//        TextView titleText = ((TextView) v.findViewById(R.id.title));
-//        titleText.setText(this.getTitle());
-//        Typeface typeface = Typeface.createFromAsset(getAssets(),"fledgling-sb.ttf");
-//        titleText.setTypeface(typeface);
-
-//        this.getSupportActionBar().setCustomView(v);
+//
         SpannableString s = new SpannableString("LeftOvers");
         s.setSpan(new TypefaceSpan(this, "fledgling-sb.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.setSpan(new AbsoluteSizeSpan(130),0,s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
