@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
     public static final int PERMISSIONS_REQUEST_CAMERA = 0;
     public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 321;
-//    public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,13 +169,17 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                takePhoto();
+//                checkPermissionsGranted(0, new int[]{0});
                 requestPermissions("android.permission.CAMERA", 0);
                 requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
                 requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
-                //takePhoto();
+//                takePhoto();
 
-                //ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+//                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+//                int permissionCheck = ContextCompat.checkSelfPermission(this,
+//                        Manifest.permission.CAMERA);
+
             }
         });
 
@@ -238,15 +241,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         dialog.show();
     }
 
-//    private File getImageFile(Uri imageUri) {
-//
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        if (storageDir == null) {
-//            return null;
-//        }
-//        return new File(storageDir, imageUri.getLastPathSegment());
-//
-//    }
 
     //create file for photo taken by user
     private File createImageFile() throws IOException {
@@ -265,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-//            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         }
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -288,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
                 ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
                 Log.d("permission", permission);
-//                takePhoto();
+                takePhoto();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
             }
@@ -298,11 +291,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
         switch (requestCode) {
-//            case PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    takePhoto();
-//                }
-//                break;
 //            case PERMISSIONS_REQUEST_CAMERA:
 //                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                    takePhoto();
@@ -312,10 +300,26 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
                 }
-
                 break;
         }
     }
+
+//    public static boolean checkPermissionsGranted(final Context context){
+//        int currentAPIVersion = Build.VERSION.SDK_INT;
+//        if (currentAPIVersion >= Build.VERSION_CODES.M){
+//            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+//               if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity)context, Manifest.permission.CAMERA)){
+//
+//                }
+//            }
+//        }
+//        switch (requestCode) {
+//            case PERMISSIONS_REQUEST_CAMERA:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    takePhoto();
+//                }
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
