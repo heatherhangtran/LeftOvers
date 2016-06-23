@@ -1,21 +1,32 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorP</item>
+        <item name="android:windowActionBar">true</item>
+        <item name="colorPrimary">@color/colorPD</item>
         <item name="colorPrimaryDark">@color/black_trans80</item>
         <item name="colorAccent">@color/colorA</item>
+        <item name="android:statusBarColor">@color/transStatus</item>
+        <item name="android:textColorPrimary">@color/textColor</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:navigationBarColor">@color/navBackground</item>
+        <item name="android:actionBarTabBarStyle">@color/colorPD</item>
+        <item name="android:actionBarTabTextStyle">@color/textColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="windowNoTitle">false</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ActionBarTabText" parent="@android:style/Widget.Holo.Light.ActionBar.TabText">
+    <item name="android:textColor">@color/textColor</item>
+    </style>
 
     <style name="SplashPage" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>

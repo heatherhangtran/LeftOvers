@@ -1,6 +1,5 @@
 package com.randybiglow.leftovers;
 
-
 import com.loopj.android.http.AsyncHttpClient;
 
 public class RecipeApiCall {
@@ -19,9 +18,6 @@ public class RecipeApiCall {
         }
         return instance;
     }
-
-    //doRequest("apple", "sugar");
-    //key value params.
 
     public void doRequest(String...ingredients) {
         AsyncHttpClient client = new AsyncHttpClient();

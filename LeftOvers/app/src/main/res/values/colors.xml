@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
     <color name="androidGrey">#B0B0B0</color>
-    <color name="colorP">#ffcc5c</color>
-    <color name="colorPD">#ff6f69</color>
-    <color name="colorA">#96ceb4</color>
-    <color name="yellow">#ffeead</color>
+    <color name="colorP">#dfffe7</color>
+    <color name="tabBackground">#FF8BD19D</color>
+    <!--<color name="colorP">#ffcc5c</color>-->
+    <!--<color name="colorPD">#ff6f69</color>-->
+    <color name="colorPD">#87f2a2</color>
+    <color name="colorA">#7460e5</color>
+    <!--<color name="colorA">#96ceb4</color>-->
+    <!--<color name="yellow">#ffeead</color>-->
+    <color name="transStatus">#8087f2a2</color>
     <color name="black_trans80">#50000000</color>
+    <color name="textColor">#FF1A0880</color>
+    <color name="windowColor">#bfdfffe7</color>
+    <color name="navBackground">#7ab489</color>
 </resources>

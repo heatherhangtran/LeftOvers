@@ -9,29 +9,30 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class MyFridgeFragment extends Fragment {
+public class MyFridgeFragment extends Fragment implements BarcodeCallback{
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
     private LocalDBHelper helper;
     private ListView listView;
     static Cursor cursor;
-    static TextView nameTextView, expTextView, testClickedTextView;
-    private Button searchRecipeButton, barcodeScanner;
-    private CheckBox checkbox;
+    static TextView nameTextView, expTextView, testTextView;
+
+    private ImageButton barcodeScanner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +45,9 @@ public class MyFridgeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
-        checkbox = (CheckBox) fridgeFragmentView.findViewById(R.id.checkbox);
-        testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
-        searchRecipeButton = (Button) fridgeFragmentView.findViewById(R.id.search_recipes);
-        barcodeScanner = (Button) fridgeFragmentView.findViewById(R.id.barcodeScanner);
+        barcodeScanner = (ImageButton) fridgeFragmentView.findViewById(R.id.barcodeScanner);
+        testTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
@@ -75,27 +73,21 @@ public class MyFridgeFragment extends Fragment {
                 @Override
                 public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                     v.removeOnLayoutChangeListener(this);
-
-                    //Calls method for animation.
-                    //revealView(fridgeFragmentView);
                 }
             });
         }
 
-        searchRecipeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Add Recipe Button code here.
-            }
-        });
-
+        //Calls on third party libraries to start barcode scanner.
         barcodeScanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
                 intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+
+                BarcodeApiCall.getInstance(MyFridgeFragment.this).doRequest();
             }
         });
+
         return fridgeFragmentView;
     }
 
@@ -108,20 +100,27 @@ public class MyFridgeFragment extends Fragment {
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
+
             return LayoutInflater.from(context).inflate(R.layout.list_item_layout, parent, false);
         }
 
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
+            SpannableString spannableString = new SpannableString(cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME)));
+            SpannableString expiration = new SpannableString("Exp: " + cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP)));
+
+            spannableString.setSpan(new TypefaceSpan(getActivity(), "HelveticaNeue.dfont"), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            expiration.setSpan(new TypefaceSpan(getActivity(), "HelveticaNeue.dfont"), 0, expiration.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
             nameTextView = (TextView) view.findViewById(R.id.food_item);
             expTextView = (TextView) view.findViewById(R.id.exp_entered);
-            String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
-            String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
-            nameTextView.setText(item);
-            if (expiration.matches("")) {
+            nameTextView.setText(spannableString);
+
+            if (expiration.toString().matches("")) {
+
                 expTextView.setText("No expiration date");
             } else {
-                expTextView.setText("Exp: " + expiration);
+                expTextView.setText(expiration);
             }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -148,9 +147,9 @@ public class MyFridgeFragment extends Fragment {
         }
     }
 
+    //This method returns the scan as a string of numbers.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
         Log.d("<><><>", "onActivityResult");
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult != null) {
@@ -158,6 +157,7 @@ public class MyFridgeFragment extends Fragment {
         }
     }
 
-    //send the number to zxing database and get a result.
-    //searchupc.com
+    public void barcodeCallback(String response) {
+        testTextView.setText(response);
+    }
 }
