@@ -13,6 +13,12 @@
         android:layout_marginTop="20dp"
         android:choiceMode="singleChoice" />
 
+    <TextView
+        android:id="@+id/testTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/listView" />
+
     <ImageButton
         android:id="@+id/barcodeScanner"
         android:layout_width="wrap_content"

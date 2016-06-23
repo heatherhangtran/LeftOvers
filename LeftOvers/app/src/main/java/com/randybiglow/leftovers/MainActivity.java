@@ -29,13 +29,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements RecipeCallback {
+public class MainActivity extends AppCompatActivity implements RecipeCallback, BarcodeCallback{
     static long time;
     private PagerAdapter adapter;
-
     private Uri imageUri;
-    String mCurrentPhotoPath;
     private static int TAKE_PICTURE = 1;
+    String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,22 +49,20 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("My Fridge"));
         tabLayout.addTab(tabLayout.newTab().setText("Recipes"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabTextColors(R.color.colorA, R.color.textColor);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount()) {
-        };
+        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount()) {};
         viewPager.setAdapter(adapter);
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
             }
 
             @Override
@@ -78,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
             }
         });
-
     }
 
     public void addNewIngredient() {
@@ -281,6 +277,14 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         Fragment currentFragment = adapter.getCurrentFragment();
         if (currentFragment != null && currentFragment instanceof RecipesFragment) {
             ((RecipesFragment) currentFragment).handleCallback(response);
+        }
+    }
+
+    @Override
+    public void barcodeCallback(String response) {
+        Fragment currentFragment = adapter.getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof MyFridgeFragment) {
+            ((MyFridgeFragment) currentFragment).barcodeCallback(response);
         }
     }
 }
