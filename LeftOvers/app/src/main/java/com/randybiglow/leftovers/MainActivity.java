@@ -189,16 +189,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                checkPermissionsGranted(0, new int[]{0});
                 requestPermissions("android.permission.CAMERA", 0);
                 requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
                 requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
-//                takePhoto();
-
-//                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
-//                int permissionCheck = ContextCompat.checkSelfPermission(this,
-//                        Manifest.permission.CAMERA);
 
             }
         });
