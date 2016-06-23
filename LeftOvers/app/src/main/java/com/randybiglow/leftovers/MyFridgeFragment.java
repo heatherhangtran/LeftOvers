@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,25 +16,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class MyFridgeFragment extends Fragment {
+public class MyFridgeFragment extends Fragment implements BarcodeCallback{
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
     private LocalDBHelper helper;
     private ListView listView;
     static Cursor cursor;
-    static TextView nameTextView, expTextView, testClickedTextView;
-    private TypefaceSpan typefaceSpan;
-    private Typeface font;
+    static TextView nameTextView, expTextView, testTextView;
 
-    private Button barcodeScanner;
+    private ImageButton barcodeScanner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,18 +40,14 @@ public class MyFridgeFragment extends Fragment {
         helper = LocalDBHelper.getInstance(getActivity());
         Cursor cursor = helper.getIngredients();
         cursorAdapter = new FridgeCursorAdapter(getActivity(), cursor);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
-        testClickedTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
-
-
-        barcodeScanner = (Button) fridgeFragmentView.findViewById(R.id.barcodeScanner);
+        barcodeScanner = (ImageButton) fridgeFragmentView.findViewById(R.id.barcodeScanner);
+        testTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
@@ -80,22 +73,21 @@ public class MyFridgeFragment extends Fragment {
                 @Override
                 public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                     v.removeOnLayoutChangeListener(this);
-
-
-                    //Calls method for animation.
-                    //revealView(fridgeFragmentView);
                 }
             });
         }
 
-
+        //Calls on third party libraries to start barcode scanner.
         barcodeScanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
                 intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+
+                BarcodeApiCall.getInstance(MyFridgeFragment.this).doRequest();
             }
         });
+
         return fridgeFragmentView;
     }
 
@@ -105,7 +97,6 @@ public class MyFridgeFragment extends Fragment {
             super(context, cursor, 0);
 
         }
-
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -156,9 +147,9 @@ public class MyFridgeFragment extends Fragment {
         }
     }
 
+    //This method returns the scan as a string of numbers.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
         Log.d("<><><>", "onActivityResult");
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult != null) {
@@ -166,6 +157,7 @@ public class MyFridgeFragment extends Fragment {
         }
     }
 
-    //send the number to zxing database and get a result.
-    //searchupc.com
+    public void barcodeCallback(String response) {
+        testTextView.setText(response);
+    }
 }
