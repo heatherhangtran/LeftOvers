@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ public class MyFridgeFragment extends Fragment {
     private ListView listView;
     static Cursor cursor;
     static TextView nameTextView, expTextView, testClickedTextView;
+    private Typeface font;
 
     private Button barcodeScanner;
 
@@ -110,8 +112,11 @@ public class MyFridgeFragment extends Fragment {
 
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
+            font = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeue.dfont");
             nameTextView = (TextView) view.findViewById(R.id.food_item);
             expTextView = (TextView) view.findViewById(R.id.exp_entered);
+            nameTextView.setTypeface(font);
+            expTextView.setTypeface(font);
             String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
             String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
             nameTextView.setText(item);
