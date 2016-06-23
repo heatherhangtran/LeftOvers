@@ -279,8 +279,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
                 ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-//                Log.d("permission", permission);
-
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
             }
