@@ -19,7 +19,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -280,13 +279,16 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
                 ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
-                Log.d("permission", permission);
-                takePhoto();
+//                Log.d("permission", permission);
+
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
             }
+        }else{
+            takePhoto();
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
@@ -304,22 +306,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         }
     }
 
-//    public static boolean checkPermissionsGranted(final Context context){
-//        int currentAPIVersion = Build.VERSION.SDK_INT;
-//        if (currentAPIVersion >= Build.VERSION_CODES.M){
-//            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-//               if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity)context, Manifest.permission.CAMERA)){
-//
-//                }
-//            }
-//        }
-//        switch (requestCode) {
-//            case PERMISSIONS_REQUEST_CAMERA:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    takePhoto();
-//                }
-//        }
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
