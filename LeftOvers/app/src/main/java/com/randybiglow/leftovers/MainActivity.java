@@ -3,7 +3,6 @@ package com.randybiglow.leftovers;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,12 +13,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,16 +44,24 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getSupportActionBar().setDisplayShowCustomEnabled(true);
-        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-        LayoutInflater titleInflator = LayoutInflater.from(this);
-        View v = titleInflator.inflate(R.layout.titleview, null);
-        TextView titleText = ((TextView) v.findViewById(R.id.title));
-        titleText.setText(this.getTitle());
-        Typeface typeface = Typeface.createFromAsset(getAssets(),"fledgling-sb.ttf");
-        titleText.setTypeface(typeface);
+//        this.getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        LayoutInflater titleInflator = LayoutInflater.from(this);
+//        View v = titleInflator.inflate(R.layout.titleview, null);
+//        TextView titleText = ((TextView) v.findViewById(R.id.title));
+//        titleText.setText(this.getTitle());
+//        Typeface typeface = Typeface.createFromAsset(getAssets(),"fledgling-sb.ttf");
+//        titleText.setTypeface(typeface);
 
-        this.getSupportActionBar().setCustomView(v);
+//        this.getSupportActionBar().setCustomView(v);
+        SpannableString s = new SpannableString("LeftOvers");
+        s.setSpan(new TypefaceSpan(this, "fledgling-sb.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new AbsoluteSizeSpan(130),0,s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+// Update the action bar title with the TypefaceSpan instance
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(s);
         setContentView(R.layout.activity_main);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

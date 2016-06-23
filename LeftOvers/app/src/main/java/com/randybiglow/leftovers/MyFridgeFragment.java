@@ -112,7 +112,7 @@ public class MyFridgeFragment extends Fragment {
 
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
-            font = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeue.dfont");
+            font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue.dfont");
             nameTextView = (TextView) view.findViewById(R.id.food_item);
             expTextView = (TextView) view.findViewById(R.id.exp_entered);
             nameTextView.setTypeface(font);
