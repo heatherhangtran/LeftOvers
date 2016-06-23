@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,7 @@ public class MyFridgeFragment extends Fragment {
     private ListView listView;
     static Cursor cursor;
     static TextView nameTextView, expTextView, testClickedTextView;
+    private TypefaceSpan typefaceSpan;
     private Typeface font;
 
     private Button barcodeScanner;
@@ -112,20 +115,21 @@ public class MyFridgeFragment extends Fragment {
 
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
-            font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue.dfont");
+            SpannableString spannableString = new SpannableString(cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME)));
+            SpannableString expiration = new SpannableString("Exp: " + cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP)));
+
+            spannableString.setSpan(new TypefaceSpan(getActivity(), "HelveticaNeue.dfont"), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            expiration.setSpan(new TypefaceSpan(getActivity(), "HelveticaNeue.dfont"), 0, expiration.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
             nameTextView = (TextView) view.findViewById(R.id.food_item);
             expTextView = (TextView) view.findViewById(R.id.exp_entered);
-            nameTextView.setTypeface(font);
-            expTextView.setTypeface(font);
-            String item = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_NAME));
-            String expiration = cursor.getString(cursor.getColumnIndexOrThrow(LocalDBHelper.COL_EXP));
-            nameTextView.setText(item);
+            nameTextView.setText(spannableString);
 
-            if (expiration.matches("")) {
+            if (expiration.toString().matches("")) {
 
                 expTextView.setText("No expiration date");
             } else {
-                expTextView.setText("Exp: " + expiration);
+                expTextView.setText(expiration);
             }
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
