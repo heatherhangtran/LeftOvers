@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -42,7 +42,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements RecipeCallback, BarcodeCallback{
+public class MainActivity extends AppCompatActivity implements BarcodeCallback, RecipeCallback {
     static long time;
     private PagerAdapter adapter;
     private Uri imageUri;
@@ -56,12 +56,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//
         SpannableString s = new SpannableString("LeftOvers");
         s.setSpan(new TypefaceSpan(this, "fledgling-sb.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        s.setSpan(new AbsoluteSizeSpan(130),0,s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new AbsoluteSizeSpan(115),0,s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-// Update the action bar title with the TypefaceSpan instance
+        // Update the action bar title with the TypefaceSpan instance
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(s);
         setContentView(R.layout.activity_main);
@@ -169,14 +168,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
 
             private String current = "";
             private Calendar cal = Calendar.getInstance();
         };
         expField.addTextChangedListener(tw);
-
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,13 +182,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
                 requestPermissions("android.permission.CAMERA", 0);
                 requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
                 requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
-//                takePhoto();
-
-//                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
-//                int permissionCheck = ContextCompat.checkSelfPermission(this,
-//                        Manifest.permission.CAMERA);
-
             }
         });
 
@@ -310,15 +300,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
         switch (requestCode) {
-//            case PERMISSIONS_REQUEST_CAMERA:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    takePhoto();
-//                }
-//                break;
             case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
@@ -349,15 +333,18 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     }
 
     @Override
-    public void handleCallback(String response) {
-        Fragment currentFragment = adapter.getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof RecipesFragment) {
-            ((RecipesFragment) currentFragment).handleCallback(response);
-        }
+    public void handleCallback(String nameRes, String imgRes) {
+        //Fragment currentFragment = adapter.getCurrentFragment();
+        RecipeApiCall.handleCallback(nameRes,imgRes);
+        Log.e("<><><><>", "handleCallback");
     }
 
     @Override
     public void barcodeCallback(String response) {
-        nameField.setText(response);
+        if (nameField.toString().matches("")) {
+            Toast.makeText(MainActivity.this, "Barcode not found, please enter name.", Toast.LENGTH_LONG).show();
+        } else {
+            nameField.setText(response);
+        }
     }
 }
