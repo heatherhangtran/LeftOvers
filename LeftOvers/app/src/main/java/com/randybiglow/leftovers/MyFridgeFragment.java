@@ -26,9 +26,7 @@ public class MyFridgeFragment extends Fragment{
     private LocalDBHelper helper;
     private ListView listView;
     static Cursor cursor;
-    static TextView nameTextView, expTextView, testTextView;
-
-    //private ImageButton barcodeScanner;
+    static TextView nameTextView, expTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,6 @@ public class MyFridgeFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
         //barcodeScanner = (ImageButton) fridgeFragmentView.findViewById(R.id.barcodeScanner);
-        testTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
 
         if (cursorAdapter == null) {
             helper = LocalDBHelper.getInstance(getActivity());
@@ -73,17 +70,6 @@ public class MyFridgeFragment extends Fragment{
             });
         }
 
-//        //Calls on third party libraries to start barcode scanner.
-//        barcodeScanner.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-//                intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
-//
-//                BarcodeApiCall.getInstance(MyFridgeFragment.this).doRequest();
-//            }
-//        });
-
         return fridgeFragmentView;
     }
 
@@ -91,7 +77,6 @@ public class MyFridgeFragment extends Fragment{
 
         public FridgeCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
-
         }
 
         @Override
@@ -145,19 +130,4 @@ public class MyFridgeFragment extends Fragment{
             });
         }
     }
-
-//    //This method returns the scan as a string of numbers.
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Log.d("<><><><>", "onActivityResult");
-//        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//        if (scanResult != null) {
-//            Log.d("<><><><><><>", "THE SCANNER WORKS!!" + scanResult.toString());
-//        }
-//    }
-//
-//    public void barcodeCallback(String response) {
-//        Log.d("<><><><>", "barcodeCallback");
-//        testTextView.setText(response);
-//    }
 }

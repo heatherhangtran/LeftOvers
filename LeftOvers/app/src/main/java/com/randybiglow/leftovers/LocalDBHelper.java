@@ -13,12 +13,21 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "FRIDGE.db";
     public static final String INGREDIENT_TABLE = "INGREDIENTS";
+    public static final String RECIPE_TABLE = "RECIPES";
     public static final String COL_ID = "_id";
     public static final String COL_NAME = "Name";
     public static final String COL_EXP = "Expiration";
     public static final String COL_ADDED = "Added";
     public static final String COL_PHOTO = "Photo";
     public static final String[] INGREDIENT_COLUMNS = {COL_ID, COL_NAME, COL_EXP, COL_ADDED, COL_PHOTO};
+    public static final String[] RECIPE_COLUMNS = {COL_ID, COL_NAME, COL_PHOTO};
+    private static final String CREATE_RECIPE_TABLE =
+            "CREATE TABLE " + RECIPE_TABLE +
+                    "(" +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NAME + " TEXT, " +
+                    COL_PHOTO + " TEXT )";
+
     private static final String CREATE_INGREDIENT_TABLE =
             "CREATE TABLE " + INGREDIENT_TABLE +
                     "(" +
@@ -46,12 +55,16 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_INGREDIENT_TABLE);
+        db.execSQL(CREATE_RECIPE_TABLE);
+
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + INGREDIENT_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + RECIPE_TABLE);
+
         this.onCreate(db);
     }
     //Adding methods to populate listview with sort logic
@@ -64,6 +77,23 @@ public class LocalDBHelper extends SQLiteOpenHelper {
                 COL_EXP + " FROM " + INGREDIENT_TABLE,null, null);
 
         return cursor;
+    }
+    public void addRecipes(String[] id, String[] name, String[] image) {
+
+        SQLiteDatabase myDB = getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+
+        myDB.delete(RECIPE_TABLE, null, null);
+
+        for (int i = 0; i < name.length; i++) {
+            values.put(COL_ID, id[i]);
+            values.put(COL_NAME, name[i]);
+            values.put(COL_PHOTO, image[i]);
+
+            myDB.insert(RECIPE_TABLE, null, values);
+        }
+        close();
     }
     public long addItem(String name, String exp, String date, String imagePath){
         SQLiteDatabase myDB = getReadableDatabase();
@@ -99,12 +129,12 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     }
 
     //Adding method for searching
-    public Cursor searchIngredients(String query){
+    public Cursor searchRecipe(String query){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(INGREDIENT_TABLE,
-                INGREDIENT_COLUMNS,
-                COL_NAME + " LIKE ? OR " + COL_EXP + " LIKE ? OR " + COL_ADDED + " LIKE ? ",
-                new String[]{"%"+ query + "%" , "%" + query + "%" , "%" + query + "%"},
+        Cursor cursor = db.query(RECIPE_TABLE,
+                RECIPE_COLUMNS,
+                COL_NAME + " LIKE ? OR " + COL_PHOTO + " LIKE ? ",
+                new String[]{"%"+ query + "%" , "%" + query + "%"},
                 null,
                 null,
                 null,
