@@ -1,15 +1,20 @@
 package com.randybiglow.leftovers;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -41,26 +46,17 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     static long time;
     private PagerAdapter adapter;
     private Uri imageUri;
-    private static int TAKE_PICTURE = 1;
     String mCurrentPhotoPath;
     private EditText nameField;
     static String barcodeNumbers;
-
-
+    private static int TAKE_PICTURE = 1;
+    public static final int PERMISSIONS_REQUEST_CAMERA = 0;
+    public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 321;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        LayoutInflater titleInflator = LayoutInflater.from(this);
-//        View v = titleInflator.inflate(R.layout.titleview, null);
-//        TextView titleText = ((TextView) v.findViewById(R.id.title));
-//        titleText.setText(this.getTitle());
-//        Typeface typeface = Typeface.createFromAsset(getAssets(),"fledgling-sb.ttf");
-//        titleText.setTypeface(typeface);
-
-//        this.getSupportActionBar().setCustomView(v);
+//
         SpannableString s = new SpannableString("LeftOvers");
         s.setSpan(new TypefaceSpan(this, "fledgling-sb.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.setSpan(new AbsoluteSizeSpan(130),0,s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -185,7 +181,17 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto();
+//                checkPermissionsGranted(0, new int[]{0});
+                requestPermissions("android.permission.CAMERA", 0);
+                requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
+                requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
+//                takePhoto();
+
+//                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+//                int permissionCheck = ContextCompat.checkSelfPermission(this,
+//                        Manifest.permission.CAMERA);
+
             }
         });
 
@@ -207,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
                 String name = nameField.getText().toString();
                 String exp = expField.getText().toString();
-//                Blob blob = cameraButton.get
                 System.out.println(dateFormat.format(date));
                 LocalDBHelper helper = LocalDBHelper.getInstance(MainActivity.this);
                 try {
@@ -257,15 +262,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         dialog.show();
     }
 
-//    private File getImageFile(Uri imageUri) {
-//
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        if (storageDir == null) {
-//            return null;
-//        }
-//        return new File(storageDir, imageUri.getLastPathSegment());
-//
-//    }
 
     //create file for photo taken by user
     private File createImageFile() throws IOException {
@@ -280,6 +276,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
     //start camera to take photo and save image to file name
     private void takePhoto() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+        }
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File photoFile = null;
 
@@ -296,6 +298,35 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     }
 
     //This method returns the scan and photo results.
+    private void requestPermissions(String permission, int requestCode){
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+            }
+        }else{
+            takePhoto();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
+        switch (requestCode) {
+//            case PERMISSIONS_REQUEST_CAMERA:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    takePhoto();
+//                }
+//                break;
+            case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takePhoto();
+                }
+                break;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
