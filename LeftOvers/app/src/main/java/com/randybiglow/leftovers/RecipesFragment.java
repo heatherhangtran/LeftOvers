@@ -1,6 +1,5 @@
 package com.randybiglow.leftovers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,15 +36,16 @@ public class RecipesFragment extends Fragment implements RecipeCallback {
         recipeButton = (Button) recipesFragmentView.findViewById(R.id.searchRecipe);
         RecipeApiCall.getInstance(RecipesFragment.this).doRequest();
         recipeImage = (ImageView) recipesFragmentView.findViewById(R.id.recipeImage);
-        linkButton = (Button) recipesFragmentView.findViewById(R.id.linkButton);
-        linkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), WebView.class);
-                startActivity(intent);
-            }
-        });
+//        linkButton = (Button) recipesFragmentView.findViewById(R.id.linkButton);
+//        linkButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), WebView.class);
+//                startActivity(intent);
+//            }
+//        });
         recipeName = (TextView) recipesFragmentView.findViewById(R.id.recipeName);
+        recipeUrl = (TextView) recipesFragmentView.findViewById(R.id.recipeUrl);
         recipeName.setImeOptions(EditorInfo.IME_ACTION_DONE);
         recipeName.setSingleLine();
         recipeUrl.setMovementMethod(LinkMovementMethod.getInstance());
@@ -93,7 +93,7 @@ public class RecipesFragment extends Fragment implements RecipeCallback {
                 .load(imgRes)
                 .into(recipeImage);
         recipeName.setText(nameRes);
-//        recipeUrl.setText(urlRes);
+        recipeUrl.setText(urlRes);
 
 
     }
