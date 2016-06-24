@@ -42,12 +42,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements BarcodeCallback{
+public class MainActivity extends AppCompatActivity implements BarcodeCallback, RecipeCallback {
     static long time;
     private PagerAdapter adapter;
     private Uri imageUri;
     String mCurrentPhotoPath;
-    private EditText nameField, recipeEditText;
+    private EditText nameField;
     static String barcodeNumbers;
     private static int TAKE_PICTURE = 1;
     public static final int PERMISSIONS_REQUEST_CAMERA = 0;
@@ -332,12 +332,12 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback{
         }
     }
 
-//    @Override
-//    public void handleCallback(String nameRes, String imgRes) {
-//        Fragment currentFragment = adapter.getCurrentFragment();
-//        RecipesFragment.handleCallback(nameRes,imgRes);
-//        Log.e("<><><><>", "handleCallback");
-//    }
+    @Override
+    public void handleCallback(String nameRes, String imgRes) {
+        //Fragment currentFragment = adapter.getCurrentFragment();
+        RecipeApiCall.handleCallback(nameRes,imgRes);
+        Log.e("<><><><>", "handleCallback");
+    }
 
     @Override
     public void barcodeCallback(String response) {

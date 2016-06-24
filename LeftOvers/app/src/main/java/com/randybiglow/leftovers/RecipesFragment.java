@@ -66,15 +66,13 @@ public class RecipesFragment extends Fragment implements RecipeCallback{
         }
     }
 
-    @Override
+    //@Override
     public void handleCallback(String nameRes, String imgRes) {
         Log.e("<><><><>","RecipeFragmentCallback");
 
         try{
             Picasso.with(getContext())
                     .load(imgRes)
-//                .fit()
-//                .centerCrop()
                     .into(recipeImage);
             //testTextView.setText(response);
             recipeName.setText(nameRes);

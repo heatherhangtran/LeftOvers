@@ -61,9 +61,8 @@ public class RecipeApiCall {
                             e.printStackTrace();
                         }
 
-
                         System.out.println(title + image_url);
-                        //callback.handleCallback(title, image_url);
+                        callback.handleCallback(title, image_url);
                     }
                 });
 
