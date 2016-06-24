@@ -56,13 +56,12 @@ public class RecipeApiCall {
                             JSONObject post = results.getJSONObject(0);
                             title = post.getString("title");
                             image_url = post.getString("image_url");
+                            source_url = post.getString("source_url");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        System.out.println(title + image_url);
-                        callback.handleCallback(title, image_url);
+                        callback.handleCallback(title, image_url, source_url);
                         Log.e("<><><><><JSON", title + image_url);
                     }
                 });
