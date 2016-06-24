@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
+            //request permission to use camera and storage
             @Override
             public void onClick(View v) {
                 requestPermissions("android.permission.CAMERA", 0);
@@ -240,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 intent.putExtra("id", id);
                 imageUri = null;
-//                startActivity(intent);
 
                 MyFridgeFragment.cursor = helper.getIngredients();
                 MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
     //start camera to take photo and save image to file name
     private void takePhoto() {
-
+            //if using Marshmallow, request permission to use camera and storage
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
@@ -324,11 +324,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     @Override
     public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults){
         switch (requestCode) {
-//            case PERMISSIONS_REQUEST_CAMERA:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    takePhoto();
-//                }
-//                break;
             case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
@@ -350,10 +345,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
         if (resultCode == RESULT_CANCELED && requestCode == TAKE_PICTURE) {
 
-            //todo delete file at imageUri
-//            File file = new File(imageUri.getPath());
-//            file.delete();
-//            imageUri = null;
+            //delete file at imageUri if no photo taken
+            File file = new File(imageUri.getPath());
+            file.delete();
+            imageUri = null;
 
         }
     }
