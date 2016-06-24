@@ -13,6 +13,12 @@
         <item name="android:navigationBarColor">@color/navBackground</item>
         <item name="android:actionBarTabBarStyle">@color/colorPD</item>
         <item name="android:actionBarTabTextStyle">@color/textColor</item>
+
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/custom_transition</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/custom_transition</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">

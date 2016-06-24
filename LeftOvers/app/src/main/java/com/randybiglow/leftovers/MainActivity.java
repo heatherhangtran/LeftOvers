@@ -24,6 +24,8 @@ import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 //        this.getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        LayoutInflater titleInflator = LayoutInflater.from(this);
@@ -72,12 +75,16 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 // Update the action bar title with the TypefaceSpan instance
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(s);
+
         setContentView(R.layout.activity_main);
+
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fab);
+                fab.startAnimation(animation);
                 addNewIngredient();
             }
         });
