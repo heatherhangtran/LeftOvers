@@ -1,5 +1,5 @@
 package com.randybiglow.leftovers;
 
 public interface RecipeCallback {
-    void handleCallback(String response);
+    void handleCallback(String nameRes, String imgRes);
 }
