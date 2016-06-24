@@ -11,19 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
-public class MyFridgeFragment extends Fragment implements BarcodeCallback{
+public class MyFridgeFragment extends Fragment{
 
     static FridgeCursorAdapter cursorAdapter;
     private View fridgeFragmentView;
@@ -32,7 +27,7 @@ public class MyFridgeFragment extends Fragment implements BarcodeCallback{
     static Cursor cursor;
     static TextView nameTextView, expTextView, testTextView;
 
-    private ImageButton barcodeScanner;
+    //private ImageButton barcodeScanner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +41,7 @@ public class MyFridgeFragment extends Fragment implements BarcodeCallback{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fridgeFragmentView = inflater.inflate(R.layout.fragment_my_fridge, container, false);
-        barcodeScanner = (ImageButton) fridgeFragmentView.findViewById(R.id.barcodeScanner);
+        //barcodeScanner = (ImageButton) fridgeFragmentView.findViewById(R.id.barcodeScanner);
         testTextView = (TextView) fridgeFragmentView.findViewById(R.id.testTextView);
 
         if (cursorAdapter == null) {
@@ -77,16 +72,16 @@ public class MyFridgeFragment extends Fragment implements BarcodeCallback{
             });
         }
 
-        //Calls on third party libraries to start barcode scanner.
-        barcodeScanner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-                intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
-
-                BarcodeApiCall.getInstance(MyFridgeFragment.this).doRequest();
-            }
-        });
+//        //Calls on third party libraries to start barcode scanner.
+//        barcodeScanner.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+//                intentIntegrator.forSupportFragment(MyFridgeFragment.this).initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+//
+//                BarcodeApiCall.getInstance(MyFridgeFragment.this).doRequest();
+//            }
+//        });
 
         return fridgeFragmentView;
     }
@@ -147,17 +142,18 @@ public class MyFridgeFragment extends Fragment implements BarcodeCallback{
         }
     }
 
-    //This method returns the scan as a string of numbers.
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("<><><>", "onActivityResult");
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (scanResult != null) {
-            Log.d("<><><><><><>", "THE SCANNER WORKS!!" + scanResult.toString());
-        }
-    }
-
-    public void barcodeCallback(String response) {
-        testTextView.setText(response);
-    }
+//    //This method returns the scan as a string of numbers.
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Log.d("<><><><>", "onActivityResult");
+//        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if (scanResult != null) {
+//            Log.d("<><><><><><>", "THE SCANNER WORKS!!" + scanResult.toString());
+//        }
+//    }
+//
+//    public void barcodeCallback(String response) {
+//        Log.d("<><><><>", "barcodeCallback");
+//        testTextView.setText(response);
+//    }
 }

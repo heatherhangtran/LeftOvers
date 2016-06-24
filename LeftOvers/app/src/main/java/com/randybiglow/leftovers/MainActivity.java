@@ -17,10 +17,15 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
     private Uri imageUri;
     private static int TAKE_PICTURE = 1;
     String mCurrentPhotoPath;
+    private EditText nameField;
+    static String barcodeNumbers;
+
 
 
     @Override
@@ -56,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         SpannableString s = new SpannableString("LeftOvers");
         s.setSpan(new TypefaceSpan(this, "fledgling-sb.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.setSpan(new AbsoluteSizeSpan(130),0,s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
 // Update the action bar title with the TypefaceSpan instance
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -104,10 +111,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         builder.setView(dialogView);
-        final EditText nameField = (EditText) dialogView.findViewById(R.id.nameET);
+        nameField = (EditText) dialogView.findViewById(R.id.nameET);
         final EditText expField = (EditText) dialogView.findViewById(R.id.expET);
         final Button cameraButton = (Button) dialogView.findViewById(R.id.camera_button);
-
+        ImageButton barcodeScanner = (ImageButton) dialogView.findViewById(R.id.barcodeScanner);
         TextWatcher tw = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -182,6 +189,15 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
             }
         });
 
+        //Calls on third party libraries to start barcode scanner.
+        barcodeScanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
+                intentIntegrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+                //barcodeCallback(response);
+            }
+        });
 
         builder.setMessage(R.string.dialog_addnew).setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
@@ -279,9 +295,17 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         startActivityForResult(intent, TAKE_PICTURE);
     }
 
+    //This method returns the scan and photo results.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        Log.d("<><><><>", "onActivityResult");
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            Log.e("<><><><><><>", "THE SCANNER WORKS!!" + scanResult.toString());
+            barcodeNumbers = scanResult.getContents();
+            BarcodeApiCall.getInstance(MainActivity.this).doRequest(barcodeNumbers);
+        }
 
         if (resultCode == RESULT_CANCELED && requestCode == TAKE_PICTURE) {
 
@@ -293,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         }
     }
 
-
     @Override
     public void handleCallback(String response) {
         Fragment currentFragment = adapter.getCurrentFragment();
@@ -304,9 +327,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
 
     @Override
     public void barcodeCallback(String response) {
-        Fragment currentFragment = adapter.getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof MyFridgeFragment) {
-            ((MyFridgeFragment) currentFragment).barcodeCallback(response);
-        }
+        nameField.setText(response);
     }
 }
