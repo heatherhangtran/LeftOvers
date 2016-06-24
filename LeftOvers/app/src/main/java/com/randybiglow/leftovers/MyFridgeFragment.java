@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Spannable;
@@ -123,8 +124,11 @@ public class MyFridgeFragment extends Fragment{
                 public void onItemClick(AdapterView<?> parent, View localView, int position, long id) {
                     Intent detailsIntent = new Intent(getContext(), DetailsActivity.class);
                     cursor.moveToPosition(position);
+                    View textView = localView.findViewById(R.id.food_item);
+                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), textView, "transition");
                     detailsIntent.putExtra("id", cursor.getInt(cursor.getColumnIndex(helper.COL_ID)));
-                    startActivity(detailsIntent);
+                    startActivity(detailsIntent, activityOptionsCompat.toBundle());
+
                 }
             });
 

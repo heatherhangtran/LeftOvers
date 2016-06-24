@@ -3,13 +3,13 @@
 
     <scale
         android:duration="1000"
-        android:interpolator="@android:anim/anticipate_interpolator"
+        android:interpolator="@android:anim/accelerate_interpolator"
         android:fillAfter="false"
-        android:fromXScale="2.0"
-        android:fromYScale="2.0"
+        android:fromXScale="100%"
+        android:fromYScale="-100%"
         android:toXScale="1.0"
         android:toYScale="1.0"
-        android:pivotX="0.5"
-        android:pivotY="0.5"
+        android:pivotX="1.0"
+        android:pivotY="1.0"
         />
 </set>

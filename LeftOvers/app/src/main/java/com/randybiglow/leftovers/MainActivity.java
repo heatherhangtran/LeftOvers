@@ -86,6 +86,23 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
             @Override
             public void onClick(View view) {
                 Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fab);
+                final Animation fadeAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+//                        fab.startAnimation(fadeAnimation);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
                 fab.startAnimation(animation);
                 addNewIngredient();
             }
@@ -194,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         };
         expField.addTextChangedListener(tw);
 
-
+        //requests permission to use camera and external storage
         cameraButton.setOnClickListener(new View.OnClickListener() {
             //request permission to use camera and storage
             @Override
@@ -202,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
                 requestPermissions("android.permission.CAMERA", 0);
                 requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
                 requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
-
             }
         });
 
@@ -256,7 +272,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
                     e.printStackTrace();
                 }
 
-
                 ExpirationReceiver.notify(MainActivity.this);
             }
         });
@@ -269,9 +284,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         });
 
         AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
         dialog.show();
     }
-
 
     //create file for photo taken by user
     private File createImageFile() throws IOException {

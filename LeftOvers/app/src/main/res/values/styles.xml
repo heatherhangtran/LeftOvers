@@ -20,6 +20,10 @@
             @transition/custom_transition</item>
 
     </style>
+    
+    <style name="dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_left</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

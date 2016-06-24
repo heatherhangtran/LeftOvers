@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +24,8 @@ public class DetailsActivity extends Activity {
         setContentView(R.layout.activity_details);
 
         itemImage = (ImageView) findViewById(R.id.image);
+        Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        itemImage.startAnimation(fade_in);
 
         int id = getIntent().getIntExtra("id", -1);
         setDetails(id);
@@ -57,8 +61,11 @@ public class DetailsActivity extends Activity {
         addedText.setText(dateAdded);
         expirationText.setText(expiration);
         if(imageUri != null) setImage();
-    }
 
+        //adds transition animation
+        nameText.setTransitionName("transition");
+
+    }
 
 
 
