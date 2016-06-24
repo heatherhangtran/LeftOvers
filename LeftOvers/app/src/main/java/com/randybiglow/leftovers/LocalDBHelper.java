@@ -24,7 +24,7 @@ public class LocalDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_RECIPE_TABLE =
             "CREATE TABLE " + RECIPE_TABLE +
                     "(" +
-                    COL_ID + "INTEGER PRIMARY KEY AUTOINCREMENT" +
+                    COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COL_NAME + " TEXT, " +
                     COL_PHOTO + " TEXT )";
 
