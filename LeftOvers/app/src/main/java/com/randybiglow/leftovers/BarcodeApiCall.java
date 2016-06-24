@@ -12,7 +12,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class BarcodeApiCall {
     private static BarcodeApiCall instance;
-    private static BarcodeCallback callback;
+    public static BarcodeCallback callback;
     private int index;
     private String productName, imageurl;
 
@@ -28,10 +28,10 @@ public class BarcodeApiCall {
         return instance;
     }
 
-    public void doRequest(){
+    public void doRequest(String input){
         Log.d("<><><><>", "doRequest");
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = "http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=" + BarcodeApiData.BARCODE_API_KEY + "&upc=737628005000";
+        String url = "http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=" + BarcodeApiData.BARCODE_API_KEY + "&upc=" + input;
                 //"http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=6029921A-4A03-4937-9E35-FD3A0628CB81&upc=737628005000";
 
         client.get(url, null,
@@ -48,11 +48,12 @@ public class BarcodeApiCall {
                             //imageurl = results.getString("imageurl");
                             scannedResult = productName;
 
+
                         }catch(JSONException e){
                             e.printStackTrace();
                         }
 
-                        callback.barcodeCallback(scannedResult);
+                        if(null != scannedResult) callback.barcodeCallback(scannedResult);
                     }
                 }
         );

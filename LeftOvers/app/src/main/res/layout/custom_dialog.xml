@@ -22,10 +22,29 @@
         android:inputType="date"
         android:maxLength="11"
         android:textColorHint="#ccc" />
-    <Button
-        android:id="@+id/camera_button"
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/camera"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/camera"/>
+
+        <ImageButton
+            android:id="@+id/barcodeScanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:gravity="center"
+            android:layout_marginLeft="115dp"
+            android:src="@drawable/barcode"
+
+            />
+    </LinearLayout>
+
 
 </LinearLayout>
