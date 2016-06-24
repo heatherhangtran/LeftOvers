@@ -11,6 +11,8 @@
     <string name="camera">Add a photo?</string>
     <string name="name_directory">Barcode Name Directory</string>
     <string name="images_directory">Images Directory</string>
-    <string name="enter_items">Enter ingredients - separate by commas</string>
+    <string name="enter_items">Enter Ingredients</string>
+    <string name="enter_ingredients">Enter Ingredients</string>
+    <string name="see_recipe">View Recipe</string>
 
 </resources>
