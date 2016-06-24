@@ -57,8 +57,8 @@ public class DetailsActivity extends Activity {
         addedText.setText(dateAdded);
         expirationText.setText(expiration);
         if(imageUri != null) setImage();
+        nameText.setTransitionName("transition");
     }
-
 
 
 

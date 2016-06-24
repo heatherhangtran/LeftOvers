@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/nameTV"
-        android:textSize="25sp"/>
+        android:textSize="25sp"
+        android:transitionName="transition"/>
 
     <TextView
         android:layout_width="match_parent"
