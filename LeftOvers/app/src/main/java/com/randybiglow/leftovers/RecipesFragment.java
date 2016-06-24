@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 
 public class RecipesFragment extends Fragment {
 
@@ -67,10 +65,10 @@ public class RecipesFragment extends Fragment {
         }
 
     }
-    public interface multiChoiceListDialogListener{
-        void onOkay(ArrayList<Integer> arrayList);
-        void OnCancel();
-    }
+//    public interface multiChoiceListDialogListener{
+//        void onOkay(ArrayList<Integer> arrayList);
+//        void OnCancel();
+//    }
 
     public void handleCallback(String response) {
         try{

@@ -78,6 +78,23 @@ public class LocalDBHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
+    public void addRecipes(String[] id, String[] name, String[] image) {
+
+        SQLiteDatabase myDB = getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+
+        myDB.delete(RECIPE_TABLE, null, null);
+
+        for (int i = 0; i < name.length; i++) {
+            values.put(COL_ID, id[i]);
+            values.put(COL_NAME, name[i]);
+            values.put(COL_PHOTO, image[i]);
+
+            myDB.insert(RECIPE_TABLE, null, values);
+        }
+        close();
+    }
     public long addItem(String name, String exp, String date, String imagePath){
         SQLiteDatabase myDB = getReadableDatabase();
         ContentValues values = new ContentValues();
