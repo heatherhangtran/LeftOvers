@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        fab.startAnimation(fadeAnimation);
+//                        fab.startAnimation(fadeAnimation);
                     }
 
                     @Override
@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback {
         });
 
         AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
         dialog.show();
     }
 
