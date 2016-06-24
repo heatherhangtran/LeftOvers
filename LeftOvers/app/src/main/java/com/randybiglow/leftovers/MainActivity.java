@@ -24,14 +24,14 @@ import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -57,6 +57,18 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        this.getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        LayoutInflater titleInflator = LayoutInflater.from(this);
+//        View v = titleInflator.inflate(R.layout.titleview, null);
+//        TextView titleText = ((TextView) v.findViewById(R.id.title));
+//        titleText.setText(this.getTitle());
+//        Typeface typeface = Typeface.createFromAsset(getAssets(),"fledgling-sb.ttf");
+//        titleText.setTypeface(typeface);
+
+//        this.getSupportActionBar().setCustomView(v);
+
         SpannableString s = new SpannableString("LeftOvers");
         s.setSpan(new TypefaceSpan(this, "fledgling-sb.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         s.setSpan(new AbsoluteSizeSpan(115), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -64,12 +76,32 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
         // Update the action bar title with the TypefaceSpan instance
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(s);
+
         setContentView(R.layout.activity_main);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fab);
+                final Animation fadeAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+//                        fab.startAnimation(fadeAnimation);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                fab.startAnimation(animation);
                 addNewIngredient();
             }
         });
@@ -177,10 +209,11 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
         };
         expField.addTextChangedListener(tw);
 
+        //requests permission to use camera and external storage
         cameraButton.setOnClickListener(new View.OnClickListener() {
+            //request permission to use camera and storage
             @Override
             public void onClick(View v) {
-//                checkPermissionsGranted(0, new int[]{0});
                 requestPermissions("android.permission.CAMERA", 0);
                 requestPermissions("android.permission.WRITE_EXTERNAL_STORAGE", 321);
                 requestPermissions("android.permission.READ_EXTERNAL_STORAGE", 123);
@@ -222,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 intent.putExtra("id", id);
                 imageUri = null;
-//                startActivity(intent);
 
                 MyFridgeFragment.cursor = helper.getIngredients();
                 MyFridgeFragment.cursorAdapter.notifyDataSetChanged();
@@ -238,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
                     e.printStackTrace();
                 }
 
-
                 ExpirationReceiver.notify(MainActivity.this);
             }
         });
@@ -251,9 +282,9 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
         });
 
         AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
         dialog.show();
     }
-
 
     //create file for photo taken by user
     private File createImageFile() throws IOException {
@@ -268,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
 
     //start camera to take photo and save image to file name
     private void takePhoto() {
-
+            //if using Marshmallow, request permission to use camera and storage
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CAMERA);
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
@@ -326,10 +357,10 @@ public class MainActivity extends AppCompatActivity implements BarcodeCallback {
 
         if (resultCode == RESULT_CANCELED && requestCode == TAKE_PICTURE) {
 
-            //todo delete file at imageUri
-//            File file = new File(imageUri.getPath());
-//            file.delete();
-//            imageUri = null;
+            //delete file at imageUri if no photo taken
+            File file = new File(imageUri.getPath());
+            file.delete();
+            imageUri = null;
 
         }
     }
