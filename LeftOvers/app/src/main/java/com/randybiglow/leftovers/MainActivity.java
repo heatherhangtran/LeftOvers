@@ -30,10 +30,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -79,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCallback, B
         actionBar.setTitle(s);
 
         setContentView(R.layout.activity_main);
-
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
