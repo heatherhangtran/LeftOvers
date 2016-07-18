@@ -40,9 +40,11 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:gravity="center"
-            android:layout_marginLeft="115dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginRight="5dp"
             android:src="@drawable/barcode"
-
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             />
     </LinearLayout>
 
